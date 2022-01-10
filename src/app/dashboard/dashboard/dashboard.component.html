@@ -1,0 +1,474 @@
+<div style="width: 100%; background-color: rgb(63, 58, 58)">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="center center"
+    fxLayoutGap="15px"
+    class="control"
+  >
+    <div fxLayoutAlign="end center" fxFlex="100%" style="padding: 0.25rem">
+      <!-- <button mat-raised-button color='primary' (click)='changeState()' fxFlex.gt-xs='none'
+                style='padding:0;'>{{this.subscribing?'更新中':'暫停中'}}</button> -->
+
+      <!-- <input matInput type="search" placeholder="輸入姓名"  name="search_name" [(ngModelChange)]="getName()" formControlName="search_name" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let r of filteredResults" [value]="r.name">
+                    {{r.name}}
+                </mat-option>
+            </mat-autocomplete> -->
+
+      <!-- <mat-form-field appearance="standard" fxFlex='calc(40% - 15px)' fxFlex.gt-xs='none' style='margin-left: 1rem;'>
+                <mat-label>無信號</mat-label>
+                <mat-select [(value)]="showUnpaired" (selectionChange)="filterResult()">
+                    <mat-option [value]='true'>顯示</mat-option>
+                    <mat-option [value]='false'>不顯示</mat-option>
+                </mat-select>
+            </mat-form-field> -->
+      <form class="example-form" style="margin-top: 0.2rem">
+        <mat-form-field class="example-full-width">
+          <mat-label>請輸入姓名</mat-label>
+          <input
+            type="text"
+            placeholder="姓名"
+            aria-label="請輸入姓名"
+            matInput
+            [formControl]="myControl"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+      <section class="example-section" style="margin-left: 1rem">
+        <mat-slide-toggle
+          [checked]="subscribing"
+          (change)="slideChangeState($event)"
+          style="font-size: 0.8rem"
+          >更新中</mat-slide-toggle
+        >
+      </section>
+
+      <section class="example-section" style="margin-left: 1rem">
+        <mat-slide-toggle
+          [checked]="showUnpaired"
+          (change)="slideChangeResult($event)"
+          style="font-size: 0.8rem"
+          >無信號</mat-slide-toggle
+        >
+      </section>
+    </div>
+  </div>
+</div>
+
+<div fxLayout="row wrap" fxLayoutAlign="start center">
+  <div
+    fxFlex="25%"
+    fxFlex.xs="100%"
+    fxFlex.sm="100%"
+    fxFlex.md="50%"
+    fxFlex.lg="50%"
+    *ngFor="let r of allCurrentData"
+    style="padding: 1rem"
+  >
+    <mat-card
+      style="color: white"
+      appHighlight
+      [appHighlight]="r"
+      [routerLink]="['/personnel', r.user_id]"
+    >
+      <mat-card-title style="font-size: 1.5rem; position: relative"
+        >{{ r.name }}
+        <!-- <span style='font-size: 1rem;' *ngIf='r.temperature != "false" else noTemperature'>
+                    {{r.temperature}} °C 
+                </span> -->
+        <div
+          fxLayout="row"
+          fxLayoutAlign="end end"
+          style="position: absolute; right: -0.5rem; top: 0"
+        >
+          <app-rssi
+            *ngIf="r.hr != 0"
+            [rssi]="r.rssi"
+            style="margin-right: 0.25rem"
+            [matTooltip]="r.rssi"
+          ></app-rssi>
+          <app-rssi
+            *ngIf="r.hr == 0"
+            rssi="-999"
+            style="margin-right: 0.25rem"
+          ></app-rssi>
+          <app-battery
+            *ngIf="r.hr != 0"
+            [battery]="r.battery"
+            style="margin-right: 0rem"
+            [matTooltip]="r.battery"
+          ></app-battery>
+          <app-battery
+            *ngIf="r.hr == 0"
+            battery="0"
+            style="margin-right: 0rem"
+          ></app-battery>
+        </div>
+      </mat-card-title>
+      <!-- <ng-template #noTemperature>
+                <span style='font-size: 1rem;margin-top:-2rem;'>NA °C</span>
+            </ng-template> -->
+
+      <mat-card-content
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        style="position: relative"
+      >
+        <div
+          style="
+            position: relative;
+            transform: scale(0.85);
+            top: -0.5rem;
+            left: -0.75rem;
+            margin-bottom: -1.25rem;
+          "
+        >
+          <mat-progress-spinner
+            class="very-pink"
+            [mode]="mode"
+            color="success"
+            [value]="75"
+            style="position: absolute; transform: rotate(-135deg)"
+          ></mat-progress-spinner>
+          <mat-progress-spinner
+            [mode]="mode"
+            color="accent"
+            [value]="spinnerValue(r.hr)"
+            style="transform: rotate(-135deg)"
+          ></mat-progress-spinner>
+          <p
+            *ngIf="r.hr == 0"
+            style="
+              position: absolute;
+              left: 2.4rem;
+              top: -0.75rem;
+              font-size: 2.5rem;
+              font-weight: bold;
+            "
+          >
+            {{ r.hr }}
+          </p>
+          <p
+            *ngIf="100 > r.hr && r.hr > 0"
+            style="
+              position: absolute;
+              left: 1.75rem;
+              top: -0.75rem;
+              font-size: 2.5rem;
+              font-weight: bold;
+            "
+          >
+            {{ r.hr }}
+          </p>
+          <p
+            *ngIf="r.hr >= 100"
+            style="
+              position: absolute;
+              left: 1rem;
+              top: -0.75rem;
+              font-size: 2.5rem;
+              font-weight: bold;
+            "
+          >
+            {{ r.hr }}
+          </p>
+
+          <p
+            style="
+              position: absolute;
+              left: 2.15rem;
+              top: 3.75rem;
+              font-size: 1rem;
+            "
+          >
+            心率
+          </p>
+
+          <div
+            style="
+              width: 6.25rem;
+              height: 0.5rem;
+              background-color: white;
+              position: relative;
+              border-radius: 0.25rem;
+              margin-top: 1rem;
+            "
+          >
+            <div
+              *ngIf="r.temperature != 'false' && r.hr != 0"
+              [ngStyle]="{ width: progressValue(r.temperature) }"
+              style="
+                height: 0.5rem;
+                background-color: #ff9800;
+                position: absolute;
+                border-radius: 0.25rem;
+              "
+            ></div>
+            <div
+              *ngIf="r.temperature == 'false' || r.hr == 0"
+              [ngStyle]="{ width: '0%' }"
+              style="
+                height: 0.5rem;
+                background-color: #ff9800;
+                position: absolute;
+                border-radius: 0.25rem;
+              "
+            ></div>
+          </div>
+          <div style="margin-top: 0.25rem">
+            <p
+              *ngIf="r.temperature != 'false' && r.hr != 0"
+              style="font-size: 0.9rem; margin: 0"
+            >
+              體溫：{{ r.temperature }} °C
+            </p>
+            <p
+              *ngIf="r.temperature == 'false' || r.hr == 0"
+              style="font-size: 0.9rem; margin: 0"
+            >
+              體溫：N/A
+            </p>
+          </div>
+        </div>
+
+        <div
+          fxLayout="row"
+          fxLayoutAlign="end center"
+          style="position: absolute; right: -0.25rem; bottom: 0rem"
+        >
+          <div fxLayout="row" fxLayoutAlign="end center" [matTooltip]="r.mac">
+            <mat-icon style="font-size: 1.2rem; padding-top: 0rem"
+              >watch</mat-icon
+            >
+            <div *ngIf="r.mac != undefined" style="font-size: 0.85rem">
+              {{ r.mac.slice(12) }}
+            </div>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="end center"
+            [matTooltip]="r.location"
+            style="margin-left: 0.75rem"
+          >
+            <mat-icon
+              *ngIf="r.hr != 0"
+              style="font-size: 1.35rem; padding-top: 0rem"
+              >location_on</mat-icon
+            >
+            <mat-icon
+              *ngIf="r.hr == 0"
+              style="font-size: 1.35rem; padding-top: 0rem"
+              >location_off</mat-icon
+            >
+            <div
+              *ngIf="r.hr != 0"
+              style="
+                font-size: 0.8rem;
+                margin: 0.15rem auto auto 0rem;
+                letter-spacing: 0.5px;
+              "
+            >
+              {{ r.location }}
+            </div>
+            <div
+              *ngIf="r.hr == 0"
+              style="
+                font-size: 0.8rem;
+                margin: 0.15rem auto auto 0rem;
+                letter-spacing: 0.5px;
+              "
+            >
+              無訊號
+            </div>
+          </div>
+        </div>
+
+        <div
+          fxLayout="row "
+          fxLayoutAlign="start start"
+          style="
+            position: absolute;
+            top: 0.5rem;
+            right: -0.25rem;
+            width: calc(100% - 5.5rem);
+            height: 6rem;
+          "
+        >
+          <div
+            fxFlex="25%"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            style="border: 3px solid white; border-radius: 0.5rem"
+            [ngStyle]="{
+              border:
+                r.rmssd > 0 && r.rmssd <= 0.5
+                  ? '3px solid red'
+                  : r.rmssd > 0.5 && r.rmssd <= 6.4
+                  ? '3px solid orange'
+                  : '3px solid white'
+            }"
+          >
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 0.5rem; text-align: center"
+            >
+              RMSSD
+            </p>
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 1.5rem; text-align: center"
+            >
+              {{ r.rmssd || 0 }}
+            </p>
+          </div>
+          <div
+            fxFlex="25%"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            style="border-radius: 0.5rem; margin-left: 5%"
+            [ngStyle]="{
+              border:
+                r.sdnn > 0 && r.sdnn <= 17.5
+                  ? '3px solid red'
+                  : r.sdnn > 17.5 && r.sdnn <= 20.5
+                  ? '3px solid orange'
+                  : '3px solid white'
+            }"
+          >
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 0.5rem; text-align: center"
+            >
+              SDNN
+            </p>
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 1.5rem; text-align: center"
+            >
+              {{ r.sdnn || 0 }}
+            </p>
+          </div>
+          <div
+            fxFlex="25%"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            style="border-radius: 0.5rem; margin-left: 5%"
+            [ngStyle]="{
+              border:
+                r.hrr >= 60
+                  ? '3px solid red'
+                  : r.hrr >= 40
+                  ? '3px solid orange'
+                  : '3px solid white'
+            }"
+          >
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 0.5rem; text-align: center"
+            >
+              %HRR
+            </p>
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 1.5rem; text-align: center"
+            >
+              {{ r.hrr || 0 }}
+            </p>
+          </div>
+          <div
+            fxFlex="25%"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            style="border-radius: 0.5rem; margin-left: 5%"
+            [ngStyle]="{
+              border:
+                r.ratio > 3.2 || (r.ratio > 0 && r.ratio < 0.1)
+                  ? '3px solid red'
+                  : (r.ratio >= 2.8 && r.ratio <= 3.2) ||
+                    (r.ratio >= 0.1 && r.ratio <= 0.5)
+                  ? '3px solid orange'
+                  : '3px solid white'
+            }"
+          >
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 0.5rem; text-align: center"
+            >
+              LF/HF
+            </p>
+            <p
+              fxFlex="100%"
+              style="margin: 0.25rem; font-size: 1.5rem; text-align: center"
+            >
+              {{ r.ratio || 0 }}
+            </p>
+          </div>
+        </div>
+
+        <!-- <h1 *ngIf="r.hr !== 0; else noHr" fxFlex="none"
+                    style='font-weight: 200; font-size: 3rem; margin:0;'>
+                    <div style='font-weight: 30;font-size: 2rem;'>
+                        <span style='font-weight: 30;font-size: 1rem;'>HR　: </span>{{r.hr}}
+                    </div>
+                    <div *ngIf='r.rmssd != undefined' style='font-weight: 30;font-size: 2rem;'>
+                        <span style='font-weight: 30;font-size: 1rem;'>RMSSD : </span>{{r.rmssd.slice(-1)}}
+                    </div>
+                    <div *ngIf='r.sdnn != undefined' style='font-weight: 30;font-size: 2rem;'>
+                        <span style='font-weight: 30;font-size: 1rem;'>SDNN : </span>{{r.sdnn.slice(-1)}}
+                    </div>
+                    <div *ngIf='r.hrr != undefined' style='font-weight: 30;font-size: 2rem;'>
+                        <span style='font-weight: 30;font-size: 1rem;'>%HRR : </span>{{r.hrr.slice(-1)}}
+                    </div>
+                </h1> -->
+
+        <!-- <ng-template #noHr>
+                    <h1 style='font-weight: 200; font-size: 3rem; margin:0;'>
+                        <div>
+                            <span style='font-weight: 70;font-size: 2rem;'></span>No signal
+                        </div>
+                        <div *ngIf='r.rmssd != undefined'>
+                            <span style='font-weight: 50;font-size: 1rem;'></span> 
+                        </div>
+                        <div *ngIf='r.hrr != undefined'>
+                            <span style='font-weight: 50;font-size: 1rem;'></span>
+                        </div>
+                    </h1>
+                </ng-template> -->
+
+        <!-- <div fxFlex="none" style='text-align: right; margin-bottom:2rem;' *ngIf='r.hr !== 0; else noHr1'> -->
+
+        <!-- <app-battery [battery]='r.battery' style="margin-right:0rem;"></app-battery> -->
+        <!-- <span>{{r.battery}}%</span><br> -->
+        <!-- <span>{{r.rssi}}</span> -->
+        <!-- <app-rssi [rssi]='r.rssi' style="margin-right:0rem;"></app-rssi> -->
+        <!-- <div>{{r.rssi}}</div> -->
+        <!-- <div style="margin-top:0.3rem;" *ngIf='r.mac != undefined'>{{r.mac.slice(12)}}</div> -->
+        <!-- <div style="margin-top:0.3rem;">{{r.gateway}}</div> -->
+        <!-- <div style="margin-top:0.3rem;">{{r.timestamp | customDate}}</div> -->
+        <!-- </div> -->
+        <!-- <ng-template #noHr1>
+                    <div style='text-align: right; margin-bottom:2rem;' >
+                        <app-battery [battery]=0 style="margin-right:0rem;"></app-battery>
+                        <span>{{0}}%</span><br>
+                        <app-rssi [rssi]=-999 style="margin-right:0rem;"></app-rssi>
+                        <div style="margin-top:0.3rem;" *ngIf='r.mac != undefined'>{{r.mac.slice(12)}}</div>
+                    </div>
+                </ng-template> -->
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="spinner" *ngIf="loading">
+  <mat-spinner diameter="200"> </mat-spinner>
+</div>

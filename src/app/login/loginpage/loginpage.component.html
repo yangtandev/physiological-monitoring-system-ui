@@ -1,0 +1,37 @@
+<div fxLayout="column" fxLayoutAlign="center center" style="height:95vh; width: 100%; overflow: hidden;background-color: black;">
+
+    <!-- <img src="assets/grassbg.jpg"
+        style="position: fixed; min-width:100%; min-height:100%; width:100%; top: 0px; background-color: black;"> -->
+
+    <div fxLayoutAlign="center center" style="height: 100%; width:100%;background-color: rgba(255, 255, 255, 0.705); ">
+
+        <mat-card fxLayout="row wrap"
+            style="background-color: rgba(255, 255, 255, 0.705); width: 400px; text-align: center;"
+            fxLayoutAlign="center center">
+
+            <form fxFlex="100%" fxLayout="row wrap" (ngSubmit)="onLogin()"
+                style="width: 250px; margin: 2rem 2rem 0 2rem;" fxLayoutAlign="center center">
+
+                <!-- <img src="assets/lifecorebanner.jpg" style="width:300px; margin:1.5rem;"> -->
+
+
+
+                <mat-form-field appearance="standard" fxFlex="100%"
+                    style="color:#303030; margin-bottom: 0; padding: 0;">
+                    <mat-label style="color:#303030;">帳號</mat-label>
+                    <input matInput required type="text" color="#303030" [(ngModel)]="username"
+                        [ngModelOptions]="{standalone: true}" name='email' style="color:#303030;">
+                </mat-form-field>
+
+                <mat-form-field appearance="standard" fxFlex="100%" style="color:#303030; margin-top: 0; padding: 0;">
+                    <mat-label style="color:#303030;">密碼</mat-label>
+                    <input matInput required type="password" [(ngModel)]="password"
+                        [ngModelOptions]="{standalone: true}" name='password' style="color:#303030;">
+                </mat-form-field>
+
+                <button mat-flat-button name='login' type="submit" fxFlex="100%" style="
+                  color: white; background-color: rgb(255, 94, 0);">登入</button>
+            </form>
+        </mat-card>
+    </div>
+</div>

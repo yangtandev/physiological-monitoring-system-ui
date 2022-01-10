@@ -1,0 +1,21 @@
+.control {
+    margin: 0 1rem;
+    max-width: 100%;
+  }
+// div {
+//   max-width: 2rem;
+// }
+
+
+.very-pink::ng-deep circle {
+  stroke: white;
+}
+
+::ng-deep .mat-slide-toggle-bar {
+  height: 7px !important;
+  width: 28px !important;
+}
+::ng-deep .mat-slide-toggle-thumb {
+  height: 13px !important;
+  width: 13px !important;
+}

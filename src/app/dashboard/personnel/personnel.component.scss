@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+/* ::ng-deep.mat-form-field .mat-form-field-infix {
+  width: auto;
+} */
+
+img.picture {
+  vertical-align: middle;
+  width: 15px;
+  height: 15px;
+  &:hover {
+    transform: translateX(65px) scale(10);
+  }
+}
+
+.warning {
+  color: orange;
+}

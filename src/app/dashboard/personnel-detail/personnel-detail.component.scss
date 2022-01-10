@@ -1,0 +1,77 @@
+.mat-card{
+    margin:0.5rem 0.5rem;
+}
+
+.pie-chart-container {
+  height: 500px;
+  width: 1000px;
+  float: left;
+  margin: 10px;
+}
+
+::ng-deep.mat-expansion-panel-content .mat-expansion-panel-body{
+    padding: 0;
+}
+
+.input-form mat-form-field {
+    margin: 0 0.5rem;
+}
+
+.mat-row:hover {
+  background-color: goldenrod;
+}
+
+::ng-deep {
+
+    .mat-slider-thumb-label {
+      transform: rotate(45deg) !important;
+      border-radius: 50% 50% 0 !important;
+     
+    }
+    
+    .mat-slider-thumb {
+      transform: scale(0) !important;
+    }
+    
+    .mat-slider-thumb-label-text {
+      opacity: 1 !important;
+    }
+  
+  }
+table {
+  width: 100%;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+/* ::ng-deep.mat-form-field .mat-form-field-infix {
+  width: auto;
+} */
+
+img.picture {
+  vertical-align: middle;
+  width: 15px;
+  height: 15px;
+  &:hover {
+    transform: translateX(65px) scale(10);
+  }
+}
+
+.warning {
+  color: orange;
+}
+
+.list-unstyled {
+  list-style: none;
+}

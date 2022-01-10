@@ -1,0 +1,257 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/theming";
+@import "~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss";
+
+$custom-typography: mat-typography-config(
+  $font-family: "Noto Sans TC, sans-serif",
+);
+@include mat-core($custom-typography);
+
+$theme-primary: $mat-cyan;
+$app-red: mat-palette($mat-red);
+$app-orange: mat-palette($mat-orange);
+$app-deep-orange: mat-palette($mat-deep-orange);
+$app-blue: mat-palette($mat-blue);
+$app-green: mat-palette($mat-green);
+$app-gray: mat-palette($mat-gray);
+$app-primary: mat-palette($theme-primary);
+$app-accent: mat-palette($mat-orange);
+$red: mat-color($app-red);
+$orange: mat-color($app-orange);
+$deep-orange: mat-color($app-deep-orange);
+$blue: mat-color($app-blue);
+$green: mat-color($app-green);
+$gray: mat-color($app-gray);
+
+$mat-custom: (
+  50: #fff677,
+  100: #00c3ff,
+  200: #002fff,
+  300: #90a4ae,
+  400: #78909c,
+  500: #607d8b,
+  600: #546e7a,
+  700: #455a64,
+  800: #37474f,
+  900: #263238,
+  A100: #cfd8dc,
+  A200: #b0bec5,
+  A400: #78909c,
+  A700: #455a64,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: white,
+    500: white,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: white,
+    A700: $white-87-opacity,
+  ),
+);
+@include mat-core();
+$custom-color1: mat-palette($mat-custom, 200);
+
+$cyan-dark: mat-color($app-primary, 700);
+$cyan-light: mat-color($app-primary);
+$cyan-lighter: mat-color($app-primary, 300);
+// $app-warn: mat-palette($mat-red);
+
+$theme: mat-dark-theme($app-primary, $app-accent, $custom-color1);
+@include mat-datetimepicker-theme($theme);
+@include angular-material-theme($theme);
+
+.list-unstyled {
+  list-style: none;
+}
+
+// don't transform floating label
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+  transform: translateY(-1.34375em);
+}
+
+.mat-tab-labels .mat-tab-label {
+  opacity: 1;
+  font-weight: bold;
+}
+
+.dense-form .mat-form-field-appearance-standard .mat-form-field-flex {
+  padding-top: 0;
+}
+
+img.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
+div.mat-tab-label {
+  padding: 0;
+}
+
+.map-container {
+  path {
+    transition: 0.6s fill;
+    stroke: white;
+    stroke-width: 0.25;
+  }
+
+  .highlight {
+    animation: highlightPulse 2s ease 0s infinite;
+  }
+
+  #layer1 > g,
+  #layer1 > path {
+    transition: 0.6s fill;
+    fill: $cyan-light;
+
+    &:hover {
+      fill: $cyan-lighter;
+    }
+
+    stroke: white;
+    stroke-width: 0.25;
+  }
+
+  .map-label {
+    fill: white;
+    font-size: 4px;
+    font-weight: 900;
+  }
+
+  .map-label-right {
+    fill: white;
+    font-size: 4px;
+    font-weight: 900;
+    text-anchor: end;
+    stroke: none;
+  }
+}
+
+@keyframes highlightPulse {
+  0% {
+    fill: $cyan-lighter;
+  }
+
+  50% {
+    fill: $cyan-light;
+  }
+
+  100% {
+    fill: $cyan-lighter;
+  }
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0px 100px 0px;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem;
+  overflow: auto;
+}
+
+.bg-green {
+  background-color: $green;
+}
+
+.bg-red {
+  background-color: $red;
+}
+
+.bg-blue {
+  background-color: $blue;
+}
+
+.bg-green {
+  background-color: $green;
+}
+
+.bg-orange {
+  background-color: $orange;
+}
+
+.bg-orange {
+  background-color: $deep-orange;
+}
+
+.custom-color1 {
+  background-color: mat-color(mat-palette($mat-custom), 200);
+}
+
+.text-red {
+  color: $red;
+}
+
+.text-green {
+  color: $green;
+}
+
+.text-blue {
+  color: $blue;
+}
+
+.text-orange {
+  color: $orange;
+}
+
+.text-gray {
+  color: $gray;
+}
+
+.left-border-red {
+  border-left: 10px solid $red;
+  padding-left: 0.25rem;
+}
+
+.left-border-green {
+  border-left: 10px solid $green;
+  padding-left: 0.25rem;
+}
+
+.left-border-blue {
+  border-left: 10px solid $blue;
+  padding-left: 0.25rem;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: mat-color($app-accent);
+}
+
+.mat-step-header .mat-step-icon-selected {
+  background-color: mat-color($app-primary);
+}
+
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: mat-color($app-primary);
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-success {
+  color: #fff !important;
+}
+.mat-success[disabled] {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}

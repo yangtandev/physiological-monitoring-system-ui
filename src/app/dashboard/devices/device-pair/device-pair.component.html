@@ -1,0 +1,190 @@
+<div class="table-container" [hidden]="loading">
+  <table
+    mat-table
+    matSort
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+    multiTemplateDataRows
+    #table="matTable"
+  >
+    <ng-container matColumnDef="mac">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="text-align: left"
+      >
+        MAC
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.mac }}</td>
+    </ng-container>
+    <ng-container matColumnDef="pair_type">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="text-align: left"
+      >
+        型號
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.pair_type }}</td>
+      <!-- <td mat-cell *matCellDef="let element"> {{element.pairType}} </td>       -->
+    </ng-container>
+    <ng-container matColumnDef="user_id">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="text-align: left"
+      >
+        使用人(身分證)
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.user_id }}</td>
+      <!-- <td mat-cell *matCellDef="let element"> {{element.userId}} </td> -->
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef style="text-align: right"></th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        fxLayoutGap="1rem"
+        style="text-align: right"
+      >
+        <button mat-raised-button (click)="expandedElement = element">
+          修改
+        </button>
+        <button mat-raised-button (click)="delete(element)" color="accent">
+          刪除
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="element-detail"
+          [@detailExpand]="
+            element == expandedElement ? 'expanded' : 'collapsed'
+          "
+        >
+          <form
+            #updateForm="ngForm"
+            (ngSubmit)="update(updateForm, fileInput)"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="1rem"
+          >
+            <mat-form-field appearance="standard" fxFlex="25%">
+              <mat-label>型號</mat-label>
+              <input
+                matInput
+                name="pair_type"
+                id="pair_type"
+                required
+                [ngModel]="element.pair_type"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="standard" fxFlex="25%">
+              <mat-label>使用人(身分證)</mat-label>
+              <input
+                matInput
+                name="user_id"
+                id="user_id"
+                [ngModel]="element.user_id"
+              />
+            </mat-form-field>
+
+            <input hidden name="mac" [ngModel]="element.mac" />
+            <input hidden name="user_id" [ngModel]="element.user_id" />
+            <input hidden name="pair_type" [ngModel]="element.pair_type" />
+
+            <button type="submit" mat-raised-button color="primary">
+              儲存
+            </button>
+            <button
+              type="reset;"
+              mat-raised-button
+              (click)="expandedElement = {}"
+            >
+              取消
+            </button>
+          </form>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="create">
+      <td
+        mat-footer-cell
+        *matFooterCellDef
+        [attr.colspan]="displayedColumns.length"
+      >
+        <form
+          #macForm="ngForm"
+          (ngSubmit)="create()"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="1rem"
+        >
+          <mat-form-field appearance="standard" fxFlex="15%">
+            <mat-label>MAC</mat-label>
+            <input matInput name="mac" id="mac" required [(ngModel)]="mac" />
+          </mat-form-field>
+          <mat-form-field appearance="standard" fxFlex="15%">
+            <mat-label>型號</mat-label>
+            <input
+              matInput
+              name="pair_type"
+              id="pair_type"
+              required
+              [(ngModel)]="pair_type"
+            />
+          </mat-form-field>
+          <!-- <mat-form-field appearance="standard" fxFlex="15%">
+            <mat-label>使用人(身分證)</mat-label>
+            <input matInput name='user_id' id='user_id' [(ngModel)]="user_id">
+          </mat-form-field> -->
+
+          <button
+            type="submit"
+            mat-raised-button
+            [disabled]="!macForm.form.valid"
+          >
+            新增
+          </button>
+          <span *ngIf="wait == true"
+            ><font color="yellow">已更新資料</font></span
+          >
+          <span *ngIf="wait == 'not existed'"
+            ><font color="red">使用者不存在!</font></span
+          >
+          <span *ngIf="wait == 'paired'"
+            ><font color="red">使用者重復配對!</font></span
+          >
+        </form>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: displayedColumns"
+      class="element-row"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="detail-row"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="['create']"></tr>
+  </table>
+</div>
+
+<div class="spinner" *ngIf="loading">
+  <mat-spinner diameter="200"> </mat-spinner>
+</div>
