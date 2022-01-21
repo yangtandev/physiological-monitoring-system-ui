@@ -107,7 +107,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
               currentData['location'] == null ||
               currentData['location'] == ''
             ) {
-              currentData['location'] = '無信號';
+              currentData['location'] = '未設定';
             }
             if (Date.now() - currentData['timestamp'] > 30000) {
               currentData['hr'] = 0;

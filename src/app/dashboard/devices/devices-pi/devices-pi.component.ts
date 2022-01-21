@@ -90,7 +90,6 @@ export class DevicesPiComponent implements OnInit {
   async delete(element) {
     const deleteGateway = environment.deleteGateway;
     const data = element.gateway;
-    // await this.apiService.deleteAPI(deleteGateway, data);
     await this.apiService.deleteAPI(deleteGateway, data);
     this.getGatewayData();
   }

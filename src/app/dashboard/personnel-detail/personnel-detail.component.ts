@@ -491,15 +491,18 @@ export class PersonnelDetailComponent
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.highest) {
-                    return '▲緊繃';
-                  } else if (label === limit.higher) {
                     return '▲緊張';
+                  } else if (label === limit.higher) {
+                    return '▲亢奮';
                   } else if (label === limit.lower) {
                     return '▼疲勞';
                   } else if (label === limit.lowest) {
-                    return '▼力竭';
+                    return '▼過勞';
                   }
                 },
+              },
+              gridLines: {
+                display: false,
               },
               position: 'right',
             },
@@ -589,8 +592,8 @@ export class PersonnelDetailComponent
 
   init_rmssd_chart() {
     const limit = {
-      mid: 6.4,
-      low: 0.5,
+      mid: 13.8,
+      low: 2.7,
     };
     let config = {
       type: 'line',
@@ -723,11 +726,14 @@ export class PersonnelDetailComponent
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.low) {
-                    return '▼緊繃';
+                    return '▼過勞';
                   } else if (label === limit.mid) {
-                    return '▼緊張';
+                    return '▼疲勞';
                   }
                 },
+              },
+              gridLines: {
+                display: false,
               },
               position: 'right',
             },
@@ -809,8 +815,8 @@ export class PersonnelDetailComponent
 
   init_sdnn_chart() {
     const limit = {
-      mid: 20.5,
-      low: 17.5,
+      mid: 17.5,
+      low: 8.6,
     };
     let config = {
       type: 'line',
@@ -941,13 +947,17 @@ export class PersonnelDetailComponent
                 min: 0,
                 stepSize: 0.1,
                 autoSkip: false,
+
                 callback: function (label, index, labels) {
-                  if (label === limit.low - 2) {
-                    return '▼緊繃';
-                  } else if (label === limit.mid + 2) {
-                    return '▼緊張';
+                  if (label === limit.low) {
+                    return '▼過勞';
+                  } else if (label === limit.mid) {
+                    return '▼疲勞';
                   }
                 },
+              },
+              gridLines: {
+                display: false,
               },
               position: 'right',
             },
@@ -1162,7 +1172,7 @@ export class PersonnelDetailComponent
                 stepSize: 10,
                 callback: function (label, index, labels) {
                   if (label === limit.hard) {
-                    return '▲力竭';
+                    return '▲過勞';
                   } else if (label === limit.moderate) {
                     return '▲疲勞';
                   }
