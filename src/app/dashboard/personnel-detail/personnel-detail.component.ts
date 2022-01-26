@@ -216,7 +216,7 @@ export class PersonnelDetailComponent
 
     setTimeout(() => {
       window.location.reload();
-    }, 600000);
+    }, 60000);
   }
 
   ngAfterViewInit() {

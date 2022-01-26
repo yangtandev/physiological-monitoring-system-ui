@@ -2,6 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 const port = 3000;
+// const domain = `http://192.168.5.52:${port}`;
 const domain = `http://localhost:${port}`;
 
 export const environment = {

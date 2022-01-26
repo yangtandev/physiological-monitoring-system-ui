@@ -92,7 +92,7 @@
           style="position: absolute; right: -0.5rem; top: 0"
         >
           <app-rssi
-            *ngIf="r.hr != 0"
+            *ngIf="r.hr > 0"
             [rssi]="r.rssi"
             style="margin-right: 0.25rem"
             [matTooltip]="r.rssi"
@@ -103,7 +103,7 @@
             style="margin-right: 0.25rem"
           ></app-rssi>
           <app-battery
-            *ngIf="r.hr != 0"
+            *ngIf="r.hr > 0"
             [battery]="r.battery"
             style="margin-right: 0rem"
             [matTooltip]="r.battery"
@@ -227,7 +227,7 @@
           </div>
           <div style="margin-top: 0.25rem">
             <p
-              *ngIf="r.temperature != 'false' && r.hr != 0"
+              *ngIf="r.temperature != 'false' && r.hr > 0"
               style="font-size: 0.9rem; margin: 0"
             >
               體溫：{{ r.temperature }} °C

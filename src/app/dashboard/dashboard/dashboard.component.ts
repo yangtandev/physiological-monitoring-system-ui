@@ -53,10 +53,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   selected = '';
   showUnpaired = true;
   async ngOnInit() {
-    await this.update();
     setTimeout(() => {
       window.location.reload();
-    }, 600000);
+    }, 60000);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -95,43 +94,48 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async update() {
-    timer(0, 5000)
+    timer(0, 1000)
       .pipe(takeWhile(() => this.subscribing))
       .subscribe(async () => {
-        this.allCurrentData = await this.apiService.getAPI(
-          environment.getAllCurrentData
-        );
-        if (this.allCurrentData) {
-          this.allCurrentData.forEach((currentData) => {
+        const res = new Map();
+        let allCurrentData: any = (
+          await this.apiService.getAPI(environment.getAllCurrentData)
+        ).filter((arr) => !res.has(arr.user_id) && res.set(arr.user_id, 1));
+
+        if (allCurrentData.length > 0) {
+          allCurrentData.forEach((currentData) => {
             if (
               currentData['location'] == null ||
               currentData['location'] == ''
-            ) {
+            )
               currentData['location'] = '未設定';
-            }
-            if (Date.now() - currentData['timestamp'] > 30000) {
+
+            if (Date.now() - currentData['timestamp'] > 10000)
               currentData['hr'] = 0;
-            }
           });
 
-          this.allCurrentData.sort((a, b) => b['hr'] - a['hr']);
+          allCurrentData.sort((a, b) => b['hr'] - a['hr']);
 
           let regexp = new RegExp('[A-Za-z]+');
+
           if (this.s_name != '' && regexp.test(this.s_name)) {
             this.s_name = this.s_name.toLowerCase();
-            this.allCurrentData = this.allCurrentData.filter((currentData) =>
+            allCurrentData = allCurrentData.filter((currentData) =>
               currentData['name'].toLowerCase().includes(this.s_name)
             );
           } else {
-            this.allCurrentData = this.allCurrentData.filter((currentData) =>
+            allCurrentData = allCurrentData.filter((currentData) =>
               currentData['name'].includes(this.s_name)
             );
           }
+
           if (!this.showUnpaired) {
-            this.allCurrentData = this.allCurrentData.filter(
-              (currentData) => currentData['hr'] !== 0
+            allCurrentData = allCurrentData.filter(
+              (currentData) => currentData['hr'] > 0
             );
           }
+
+          this.allCurrentData = allCurrentData;
         }
         this.loading = false;
       });
@@ -142,7 +146,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showUnpaired = event.checked;
     if (!this.showUnpaired) {
       this.allCurrentData = this.allCurrentData.filter(
-        (currentData) => currentData['hr'] !== 0
+        (currentData) => currentData['hr'] > 0
       );
     }
   }
