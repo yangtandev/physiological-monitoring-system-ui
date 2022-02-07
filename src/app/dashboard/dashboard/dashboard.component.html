@@ -76,8 +76,7 @@
     style="padding: 1rem"
   >
     <mat-card
-      style="color: white"
-      #color
+      [ngClass]="cardColor"
       appHighlight
       [appHighlight]="r"
       [routerLink]="['/personnel', r.user_id]"

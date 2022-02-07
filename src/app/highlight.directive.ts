@@ -80,8 +80,6 @@ export class HighlightDirective implements OnChanges {
       this.personnel.hr > 0 &&
       Date.now() - this.personnel.timestamp <= 10000
     ) {
-      if (this.personnel.name === '呂品希') console.log(this.personnel);
-
       if (
         low ||
         excessive ||

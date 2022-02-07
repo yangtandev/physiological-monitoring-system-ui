@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   OnDestroy,
   Input,
+  HostBinding,
 } from '@angular/core';
 import { Observable, timer } from 'rxjs';
 import uniq from 'lodash/uniq';
@@ -31,7 +32,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   s_name = '';
   mode: ProgressSpinnerMode = 'determinate';
   value = 50;
-
+  cardColor: string;
   constructor(private apiService: APIService, private router: Router) {
     const temp_auth = localStorage.getItem('enter');
     if (temp_auth == 'yes') {
@@ -80,8 +81,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     return search_name;
   }
 
-  async ngAfterViewInit() {}
-
   //計算HR圓圈
   spinnerValue(hr) {
     return (hr / 200) * 0.75 * 100;
@@ -129,6 +128,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
           this.allCurrentData.sort((a, b) => b['hr'] - a['hr']);
+          this.cardColor = '';
         }
         this.loading = false;
       });
@@ -146,9 +146,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscribing) {
       await this.update();
     } else {
-      console.log(this);
-
       this.allCurrentData.forEach((currentData) => {
+        this.cardColor = 'noSignal';
         currentData['hr'] = 0;
         currentData['temperature'] = 'false';
         currentData['location'] = '無信號';
