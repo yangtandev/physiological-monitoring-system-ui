@@ -6,13 +6,13 @@ import {
   ElementRef,
   HostListener,
 } from '@angular/core';
-
+import { Observable, timer } from 'rxjs';
 @Directive({
   selector: '[appHighlight]',
 })
 export class HighlightDirective implements OnChanges {
   @Input('appHighlight') personnel;
-  @Input('appUpdate') update;
+
   @HostBinding('class.bg-blue') get blue(): boolean {
     return this.color === 'blue';
   }
@@ -56,8 +56,6 @@ export class HighlightDirective implements OnChanges {
   }
 
   getColor(): string {
-    // console.log(this);
-
     const today = new Date();
     let age = 40,
       birthday = new Date();
@@ -78,29 +76,33 @@ export class HighlightDirective implements OnChanges {
 
     let colorClass = '';
     if (
-      !this.personnel ||
-      this.personnel.hr === 0 ||
-      Date.now() - this.personnel.timestamp > 10000
+      this.personnel &&
+      this.personnel.hr > 0 &&
+      Date.now() - this.personnel.timestamp <= 10000
     ) {
+      if (this.personnel.name === '呂品希') console.log(this.personnel);
+
+      if (
+        low ||
+        excessive ||
+        this.personnel.temperature >= 37.5 ||
+        this.personnel.temperature == 195.67
+      ) {
+        colorClass = 'red';
+      } else if (intense) {
+        colorClass = 'deep-orange';
+      } else if (moderate) {
+        colorClass = 'green';
+      } else {
+        colorClass = 'blue';
+      }
+    } else {
       colorClass = 'gray';
       this.personnel['hr'] = 0;
       this.personnel['hrr'] = 0;
       this.personnel['rmssd'] = 0;
       this.personnel['sdnn'] = 0;
       this.personnel['ratio'] = 0;
-    } else if (
-      low ||
-      excessive ||
-      this.personnel.temperature >= 37.5 ||
-      this.personnel.temperature == 195.67
-    ) {
-      colorClass = 'red';
-    } else if (intense) {
-      colorClass = 'deep-orange';
-    } else if (moderate) {
-      colorClass = 'green';
-    } else {
-      colorClass = 'blue';
     }
     return colorClass;
   }

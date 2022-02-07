@@ -1582,7 +1582,6 @@ export class PersonnelDetailComponent
           environment.getCurrentData,
           this.user_id
         );
-        console.log(this.chart_hr.data.labels);
 
         if (this.chart_hr.data.labels.length >= 60) {
           this.chart_hr.data.labels.shift();

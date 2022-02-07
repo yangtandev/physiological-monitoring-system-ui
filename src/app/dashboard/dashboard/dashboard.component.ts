@@ -20,7 +20,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { APIService } from '../../services/api.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: '[app-dashboard]',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
@@ -44,7 +44,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscribing = false;
   }
-
   gatewaysData: any = [];
   results: object[] = [];
   subscribing = true;
@@ -54,9 +53,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   selected = '';
   showUnpaired = true;
   async ngOnInit() {
-    setTimeout(() => {
-      window.location.reload();
-    }, 60000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 60000);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -99,15 +98,16 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeWhile(() => this.subscribing))
       .subscribe(async () => {
         const res = new Map();
-        this.allCurrentData = (
-          await this.apiService.getAPI(environment.getAllCurrentData)
-        ).filter((data) => !res.has(data.user_id) && res.set(data.user_id, 1));
+        this.allCurrentData = await this.apiService.getAPI(
+          environment.getAllCurrentData
+        );
 
         if (this.allCurrentData.length > 0) {
-          this.allCurrentData.forEach((currentData) => {
+          for (let currentData of this.allCurrentData) {
             if (!currentData['location'] || currentData['location'] == '')
               currentData['location'] = '未設定';
-          });
+            if (Date.now() - currentData.timestamp > 10000) currentData.hr = 0;
+          }
 
           let regexp = new RegExp('[A-Za-z]+');
 
@@ -127,9 +127,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
               (currentData) => currentData['hr'] > 0
             );
           }
-          this.allCurrentData.forEach((currentData) => {
-            if (Date.now() - currentData.timestamp > 10000) currentData.hr = 0;
-          });
+
           this.allCurrentData.sort((a, b) => b['hr'] - a['hr']);
         }
         this.loading = false;
@@ -139,11 +137,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   //變更無信號顯示
   slideChangeResult(event) {
     this.showUnpaired = event.checked;
-    if (!this.showUnpaired) {
-      this.allCurrentData = this.allCurrentData.filter(
-        (currentData) => currentData['hr'] > 0
-      );
-    }
+    this.update();
   }
 
   //變更更新狀態
@@ -152,6 +146,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscribing) {
       await this.update();
     } else {
+      console.log(this);
+
       this.allCurrentData.forEach((currentData) => {
         currentData['hr'] = 0;
         currentData['temperature'] = 'false';
