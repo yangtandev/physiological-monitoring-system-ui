@@ -12,6 +12,7 @@ import {
 })
 export class HighlightDirective implements OnChanges {
   @Input('appHighlight') personnel;
+  @Input('appUpdate') update;
   @HostBinding('class.bg-blue') get blue(): boolean {
     return this.color === 'blue';
   }
@@ -55,6 +56,8 @@ export class HighlightDirective implements OnChanges {
   }
 
   getColor(): string {
+    // console.log(this);
+
     const today = new Date();
     let age = 40,
       birthday = new Date();
@@ -76,16 +79,15 @@ export class HighlightDirective implements OnChanges {
     let colorClass = '';
     if (
       !this.personnel ||
-      !this.personnel.hr ||
       this.personnel.hr === 0 ||
-      Date.now() - this.personnel.timestamp > 300000
+      Date.now() - this.personnel.timestamp > 10000
     ) {
       colorClass = 'gray';
-      this.personnel.hr = 0;
-      this.personnel.hrr = 0;
-      this.personnel.rmssd = 0;
-      this.personnel.sdnn = 0;
-      this.personnel.ratio = 0;
+      this.personnel['hr'] = 0;
+      this.personnel['hrr'] = 0;
+      this.personnel['rmssd'] = 0;
+      this.personnel['sdnn'] = 0;
+      this.personnel['ratio'] = 0;
     } else if (
       low ||
       excessive ||

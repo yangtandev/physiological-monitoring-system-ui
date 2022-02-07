@@ -200,11 +200,10 @@ export class PersonnelDetailComponent
       this.user_id
     );
 
-    this.birthday =
-      this.personnel_current_data.birthday !== null
-        ? new Date().getFullYear() -
-          new Date(parseInt(this.personnel_current_data.birthday)).getFullYear()
-        : 40;
+    this.birthday = this.personnel_current_data.birthday
+      ? new Date().getFullYear() -
+        new Date(parseInt(this.personnel_current_data.birthday)).getFullYear()
+      : 40;
 
     await Promise.all([
       this.query_hrv_data(),
@@ -341,10 +340,10 @@ export class PersonnelDetailComponent
       Date.now()
     );
 
-    if (results !== null) {
+    if (results) {
       results.forEach((element) => {
         data.push(element.hr);
-        let time = format(parseInt(element.timestamp), 'HH:mm:ss');
+        let time = format(parseInt(element.timestamp, 10), 'HH:mm:ss');
         labels.push(time);
       });
       this.update_hr_chart();
@@ -1370,7 +1369,7 @@ export class PersonnelDetailComponent
       new Date().setHours(0, 0, 0, 0),
       Date.now()
     );
-    this.last_day_hr_mean = hr_day_data !== null ? hr_day_data.mean_hr : null;
+    this.last_day_hr_mean = hr_day_data ? hr_day_data.mean_hr : null;
 
     const hr_month_data: any = await this.apiService.getAPI(
       environment.getLatest1MonthHr,
@@ -1378,10 +1377,8 @@ export class PersonnelDetailComponent
       new Date(new Date().setDate(1)).setHours(0, 0, 0, 0),
       Date.now()
     );
-    this.last_month_hr_max =
-      hr_month_data !== null ? hr_month_data.max_hr : null;
-    this.last_month_hr_min =
-      hr_month_data !== null ? hr_month_data.min_hr : null;
+    this.last_month_hr_max = hr_month_data ? hr_month_data.max_hr : null;
+    this.last_month_hr_min = hr_month_data ? hr_month_data.min_hr : null;
   }
 
   async get_frequency_data() {
@@ -1585,6 +1582,7 @@ export class PersonnelDetailComponent
           environment.getCurrentData,
           this.user_id
         );
+        console.log(this.chart_hr.data.labels);
 
         if (this.chart_hr.data.labels.length >= 60) {
           this.chart_hr.data.labels.shift();
@@ -1594,7 +1592,7 @@ export class PersonnelDetailComponent
         const hr = current_data['hr'];
         const time = format(parseInt(current_data['timestamp']), 'HH:mm:ss');
 
-        if (hr != 0 && this.chart_hr.data.labels.indexOf(time) === -1) {
+        if (hr > 0 && this.chart_hr.data.labels.indexOf(time) === -1) {
           this.chart_hr.data.labels.push(time);
           this.chart_hr.data.datasets[0].data.push(hr);
           this.chart_hr.config.options.plugins.annotations.hr = hr;
@@ -1675,7 +1673,7 @@ export class PersonnelDetailComponent
       Date.parse(String(this.hr_start_time)),
       Date.parse(String(this.hr_end_time))
     );
-    if (all_data !== null) {
+    if (all_data) {
       let all_data_keys = [];
       let all_data_values = [];
 
