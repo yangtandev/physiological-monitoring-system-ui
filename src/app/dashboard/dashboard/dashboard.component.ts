@@ -33,15 +33,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   mode: ProgressSpinnerMode = 'determinate';
   value = 50;
   cardColor: string;
+
   constructor(private apiService: APIService, private router: Router) {
     const temp_auth = localStorage.getItem('enter');
     if (temp_auth == 'yes') {
     } else {
-      //this.router.navigate(['/login']);
       this.router.navigate(['/login']);
     }
   }
-
+  ngAfterViewInit(): void {}
   ngOnDestroy(): void {
     this.subscribing = false;
   }

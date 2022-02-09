@@ -25,8 +25,8 @@ export class HighlightDirective implements OnChanges {
   @HostBinding('class.bg-orange') get orange(): boolean {
     return this.color === 'orange';
   }
-  @HostBinding('class.bg-deep-orange') get deepOrange(): boolean {
-    return this.color === 'deep-orange';
+  @HostBinding('class.bg-brown') get deepOrange(): boolean {
+    return this.color === 'brown';
   }
   @HostBinding('class.bg-gray') get gray(): boolean {
     return this.color === 'gray';
@@ -88,7 +88,7 @@ export class HighlightDirective implements OnChanges {
       ) {
         colorClass = 'red';
       } else if (intense) {
-        colorClass = 'deep-orange';
+        colorClass = 'brown';
       } else if (moderate) {
         colorClass = 'green';
       } else {

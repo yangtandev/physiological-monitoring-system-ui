@@ -10,17 +10,21 @@ $custom-typography: mat-typography-config(
 $theme-primary: $mat-cyan;
 $app-red: mat-palette($mat-red);
 $app-orange: mat-palette($mat-orange);
-$app-deep-orange: mat-palette($mat-deep-orange);
+$app-brown: mat-palette($mat-brown);
 $app-blue: mat-palette($mat-blue);
 $app-green: mat-palette($mat-green);
 $app-gray: mat-palette($mat-gray);
 $app-primary: mat-palette($theme-primary);
 $app-accent: mat-palette($mat-orange);
-$red: mat-color($app-red);
+$red: #7b1900;
+// $red: mat-color($app-red);
 $orange: mat-color($app-orange);
-$deep-orange: mat-color($app-deep-orange);
-$blue: mat-color($app-blue);
-$green: mat-color($app-green);
+$brown: #5e4800;
+// $brown: mat-color($app-brown);
+$blue: #005571;
+// $blue: mat-color($app-blue);
+$green: #27490e;
+// $green: mat-color($app-green);
 $gray: mat-color($app-gray);
 
 $mat-custom: (
@@ -182,8 +186,8 @@ div.mat-tab-label {
   background-color: $orange;
 }
 
-.bg-deep-orange {
-  background-color: $deep-orange;
+.bg-brown {
+  background-color: $brown;
 }
 
 .custom-color1 {
