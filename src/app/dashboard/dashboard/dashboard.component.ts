@@ -97,11 +97,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeWhile(() => this.subscribing))
       .subscribe(async () => {
         const res = new Map();
-        this.allCurrentData = (
-          await this.apiService.getAPI(environment.getAllCurrentData)
-        ).filter(
-          (data: any) => !res.has(data.user_id) && res.set(data.user_id, 1)
+        this.allCurrentData = await this.apiService.getAPI(
+          environment.getAllCurrentData
         );
+        this.allCurrentData
+          .reverse()
+          .filter((data) => !res.has(data.user_id) && res.set(data.user_id, 1))
+          .reverse();
 
         if (this.allCurrentData.length > 0) {
           for (let currentData of this.allCurrentData) {
