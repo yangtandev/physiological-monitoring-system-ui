@@ -99,10 +99,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         const res = new Map();
         this.allCurrentData = (
           await this.apiService.getAPI(environment.getAllCurrentData)
-        )
-          .reverse()
-          .filter((data) => !res.has(data.user_id) && res.set(data.user_id, 1))
-          .reverse();
+        ).filter(
+          (data: any) => !res.has(data.user_id) && res.set(data.user_id, 1)
+        );
 
         if (this.allCurrentData.length > 0) {
           for (let currentData of this.allCurrentData) {

@@ -102,33 +102,18 @@ export class PersonnelComponent implements OnInit {
   }
 
   async pair() {
-    let wristbandIsPaired = false;
-    this.personnel.forEach((x) => {
-      if (x['mac'] === this.pairing['mac']) {
-        wristbandIsPaired = true;
-      }
-    });
-    if (wristbandIsPaired) {
-      this.wait = 'paired';
-      timer(5000, 0)
-        .pipe(takeWhile(() => this.wait))
-        .subscribe((val) => {
-          this.wait = false;
-        });
-    } else {
-      this.wait = true;
-      timer(5000, 0)
-        .pipe(takeWhile(() => this.wait))
-        .subscribe((val) => {
-          this.wait = false;
-        });
-      let updateData = {
-        user_id: this.pairing['user_id'],
-        mac: this.pairing['mac'],
-      };
-      await this.apiService.putAPI(environment.putPersonnelPairMac, updateData);
-      await this.getPersonnel();
-    }
+    this.wait = true;
+    timer(5000, 0)
+      .pipe(takeWhile(() => this.wait))
+      .subscribe((val) => {
+        this.wait = false;
+      });
+    let updateData = {
+      user_id: this.pairing['user_id'],
+      mac: this.pairing['mac'],
+    };
+    await this.apiService.putAPI(environment.putPersonnelPairMac, updateData);
+    await this.getPersonnel();
   }
 
   async create() {

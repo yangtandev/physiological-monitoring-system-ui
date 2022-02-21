@@ -72,56 +72,50 @@ export class DevicePairComponent implements OnInit {
   }
 
   async create() {
-    let item = {
+    let data = {
       mac: this.mac.toLowerCase(),
       pair_type: this.pair_type.toUpperCase(),
     };
-    await this.apiService.postAPI(environment.postWristband, item);
-    await this.getPairData();
-  }
-  //於手環設定頁面修改 聯動wristband & personnel
-  async update(updateForm: NgForm) {
-    let element = { ...updateForm.value };
-
-    this.allPersonnelData = await this.apiService.getAPI(
-      environment.getPersonnels
+    const repeatedly_create = this.dataSource.data.some(
+      (wristband: any) => wristband.mac === data.mac
     );
 
-    let personnelIsExisted = false;
-    this.allPersonnelData.forEach((personnelData) => {
-      if (personnelData.user_id === element.user_id) {
-        personnelIsExisted = true;
-      }
-    });
-
-    let wristbandIsPaired = false;
-    this.dataSource.data.forEach((data) => {
-      if (data.user_id === element.user_id) {
-         if (data.pair_type === element.pair_type) {
-          wristbandIsPaired = true;
-        }
-      }
-    });
-    if (!personnelIsExisted) {
-      this.wait = 'not existed';
-      timer(5000, 0)
-        .pipe(takeWhile(() => this.wait))
-        .subscribe((val) => {
-          this.wait = false;
-        });
-    } else if (wristbandIsPaired) {
-      this.wait = 'paired';
+    if (repeatedly_create) {
+      this.wait = 'repeatedly_create';
       timer(5000, 0)
         .pipe(takeWhile(() => this.wait))
         .subscribe((val) => {
           this.wait = false;
         });
     } else {
-      const updateData = {
-        pair_type: element.pair_type,
-        user_id: element.user_id,
-        mac: element.mac,
-      };
+      await this.apiService.postAPI(environment.postWristband, data);
+      await this.getPairData();
+    }
+  }
+  //於手環設定頁面修改 聯動wristband & personnel
+  async update(updateForm: NgForm) {
+    let element = { ...updateForm.value };
+    let personnelIsExisted = await this.apiService.getAPI(
+      environment.getPersonnel,
+      element.user_id
+    );
+
+    let updateDataIsEmpty = JSON.stringify(this.expandedElement) === '{}';
+    let updateDataUnchanged =
+      JSON.stringify(Object.values(this.expandedElement).sort()) ===
+      JSON.stringify(Object.values(element).sort());
+
+    if (updateDataIsEmpty || updateDataUnchanged) {
+      await this.getPairData();
+    } else if (!personnelIsExisted) {
+      this.wait = 'not existed';
+      timer(5000, 0)
+        .pipe(takeWhile(() => this.wait))
+        .subscribe((val) => {
+          this.wait = false;
+        });
+    } else {
+      const updateData = element;
       await this.apiService.putAPI(environment.putWristband, updateData);
       this.wait = true;
       timer(5000, 0)
