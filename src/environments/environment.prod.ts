@@ -58,7 +58,6 @@ export const environment = {
   getLatest1DayHrv: `${domain}/latest-1day-hrv`, // + user_id & start_time & end_time
   getLatest1WeekHrv: `${domain}/latest-1week-hrv`, // + user_id & start_time & end_time
   getLatest1MonthHrv: `${domain}/latest-1month-hrv`, // + user_id & start_time & end_time
-  getFrequencyRatio: `${domain}/frequency-domain`, // + user_id & start_time & end_time
 
   // Personnel API
   getPersonnels: `${domain}/personnels`,
