@@ -392,10 +392,10 @@
             style="border-radius: 0.5rem; margin-left: 5%"
             [ngStyle]="{
               border:
-                r.ratio > 3.2 || (r.ratio > 0 && r.ratio < 0.1)
+                r.frequency > 3.2 || (r.frequency > 0 && r.frequency < 0.1)
                   ? '3px solid red'
-                  : (r.ratio >= 2.8 && r.ratio <= 3.2) ||
-                    (r.ratio >= 0.1 && r.ratio <= 0.5)
+                  : (r.frequency >= 2.8 && r.frequency <= 3.2) ||
+                    (r.frequency >= 0.1 && r.frequency <= 0.5)
                   ? '3px solid orange'
                   : '3px solid white'
             }"
@@ -410,7 +410,7 @@
               fxFlex="100%"
               style="margin: 0.25rem; font-size: 1.5rem; text-align: center"
             >
-              {{ r.ratio || 0 }}
+              {{ r.frequency || 0 }}
             </p>
           </div>
         </div>

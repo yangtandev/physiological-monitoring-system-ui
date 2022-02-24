@@ -210,7 +210,6 @@ export class PersonnelDetailComponent
       this.query_percent_hrr_day_data(),
       this.get_hr_data(),
       this.get_hrv_data(),
-      this.get_frequency_data(),
     ]);
 
     setTimeout(() => {
@@ -1381,60 +1380,6 @@ export class PersonnelDetailComponent
     this.last_month_hr_min = hr_month_data ? hr_month_data.min_hr : null;
   }
 
-  async get_frequency_data() {
-    let frequency_interval_array = [
-      {
-        interval: 'day',
-        data: this.frequency_day_data,
-        start_time: new Date(
-          new Date().setDate(new Date().getDate() - 1)
-        ).setHours(0, 0, 0, 0),
-        end_time: new Date().setHours(0, 0, 0, 0),
-      },
-      {
-        interval: 'week',
-        data: this.frequency_week_data,
-        start_time: new Date(
-          new Date().setDate(
-            new Date().getDate() - ((new Date().getDay() + 6) % 7) - 7
-          )
-        ).setHours(0, 0, 0, 0),
-        end_time:
-          new Date(
-            new Date().setDate(
-              new Date().getDate() - ((new Date().getDay() + 6) % 7) - 7
-            )
-          ).setHours(0, 0, 0, 0) +
-          60000 * 60 * 24 * 6,
-      },
-      {
-        interval: 'month',
-        data: this.frequency_month_data,
-        start_time: new Date(
-          new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(1)
-        ).setHours(0, 0, 0, 0),
-        end_time: new Date(new Date().setDate(1)).setHours(0, 0, 0, 0),
-      },
-    ];
-    for await (let frequency_interval of frequency_interval_array) {
-      frequency_interval.data = await this.apiService.getAPI(
-        environment.getFrequencyRatio,
-        this.user_id,
-        frequency_interval.start_time,
-        frequency_interval.end_time
-      );
-
-      if (frequency_interval.data) {
-        this.update_frequency_chart(
-          frequency_interval.interval,
-          frequency_interval.data
-        );
-      } else {
-        frequency_interval.data = null;
-      }
-    }
-  }
-
   async get_hrv_data() {
     const hrv_interval_array = [
       {
@@ -1482,7 +1427,12 @@ export class PersonnelDetailComponent
       this.data = await this.apiService.getAPI(
         environment.get5MinuteHrv,
         this.user_id,
-        new Date().setHours(new Date().getHours() - 1),
+        new Date().setHours(
+          new Date().getHours() - 1,
+          new Date().getMinutes(),
+          0,
+          0
+        ),
         Date.now()
       );
 
@@ -1493,23 +1443,24 @@ export class PersonnelDetailComponent
         const frequency_array = [];
         const five_minute_label_array = [];
 
-        this.data.forEach((data, i) => {
+        for (let data of this.data) {
           hrr_array.push(data.hrr);
           rmssd_array.push(data.rmssd);
           sdnn_array.push(data.sdnn);
-          frequency_array.push(data.ratio);
-          five_minute_label_array.push(parseInt(data.timestamp));
-        });
+          frequency_array.push(data.frequency);
+          five_minute_label_array.push(parseInt(data.timestamp, 10));
+        }
 
         const one_min = 60000;
         const five_min = one_min * 5;
-        const first_timestamp =
+        const current_timestamp =
           Math.floor(five_minute_label_array[0] / 10000) * 10000;
-        const time_gap = first_timestamp % five_min;
+        const time_gap = current_timestamp % five_min;
 
         if (time_gap > 0) {
-          const num_to_remove = 5 - time_gap / one_min;
-          for (let i = 0; i < num_to_remove; i++) {
+          const compensation = time_gap / one_min;
+
+          for (let i = 1; i <= compensation; i++) {
             hrr_array.shift();
             rmssd_array.shift();
             sdnn_array.shift();
@@ -1529,7 +1480,7 @@ export class PersonnelDetailComponent
           },
         ];
 
-        if (five_minute_label_array.length >= 5) {
+        if (five_minute_label_array.length > 0) {
           chart_array.forEach((chart) => {
             this.update_five_min_hrv_chart(
               chart.chart,
@@ -1603,7 +1554,8 @@ export class PersonnelDetailComponent
   update_five_min_hrv_chart(
     chart,
     five_minute_data_array,
-    five_minute_label_array
+    five_minute_label_array,
+    label_type = 'minute'
   ) {
     this.ctx = chart.ctx;
     const gradient = this.ctx.createLinearGradient(0, 0, 0, 400);
@@ -1618,19 +1570,48 @@ export class PersonnelDetailComponent
     chart.config.data.datasets[0].data = five_minute_data_array;
     chart.config.data.datasets[1].data = five_minute_data_array;
     chart.config.data.labels = five_minute_label_array;
+    switch (label_type) {
+      case 'day':
+        chart.config.options.scales.xAxes[0].time =
+          chart.config.options.scales.xAxes[0].time = {
+            parser: false,
+            tooltipFormat: 'MMDD',
+            unit: 'day',
+            stepSize: 1,
+            displayFormats: {
+              day: 'MMDD',
+            },
+            round: 'day',
+          };
+        break;
+      case 'hour':
+        chart.config.options.scales.xAxes[0].time =
+          chart.config.options.scales.xAxes[0].time = {
+            parser: false,
+            tooltipFormat: 'HH:mm',
+            unit: 'hour',
+            stepSize: 1,
+            displayFormats: {
+              minute: 'HH:mm',
+              hour: 'HH:mm',
+            },
+            round: 'hour',
+          };
+        break;
+      default:
+        chart.config.options.scales.xAxes[0].time = {
+          parser: false,
+          tooltipFormat: 'HH:mm',
+          unit: 'minute',
+          stepSize: 5,
+          displayFormats: {
+            minute: 'HH:mm',
+            hour: 'HH:mm',
+          },
+          round: 'minute',
+        };
+    }
 
-    chart.update();
-  }
-
-  update_frequency_chart(interval: string, data: any) {
-    let interval_obj = { day: 2, week: 3, month: 4 };
-    let chart = this.frequency_chart;
-
-    Object.assign(chart.config.options.scales.xAxes[1].labels, ['', '']);
-    Object.assign(chart.config.data.datasets[interval_obj[interval]].data, [
-      data,
-      data,
-    ]);
     chart.update();
   }
 
@@ -1640,6 +1621,7 @@ export class PersonnelDetailComponent
       hrr: this.hrr_chart,
       rmssd: this.rmssd_chart,
       sdnn: this.sdnn_chart,
+      frequency: this.frequency_chart,
     };
     Object.keys(chart_obj).forEach((chart_name) => {
       let chart = chart_obj[chart_name];
@@ -1757,7 +1739,11 @@ export class PersonnelDetailComponent
         });
       }
     }
-
+    const res = new Map();
+    results = results
+      .reverse()
+      .filter((result) => !res.has(result.time) && res.set(result.time, 1))
+      .reverse();
     let csv = unparse({
       fields: ['time', 'hr', 'RRi'],
       data: results,
@@ -1804,18 +1790,14 @@ export class PersonnelDetailComponent
     if (all_data.length > 0) {
       all_data.forEach((data) => {
         this[`${data_name}_array`].push(data[`${data_name}`]);
-
-        get_timestamp = new Date(parseInt(data['timestamp']));
-        let get_month = get_timestamp.getMonth() + 1;
-        let get_date = get_timestamp.getDate();
-
-        this[`${data_name}_array_label`].push(`${get_month} / ${get_date}`);
+        this[`${data_name}_array_label`].push(parseInt(data['timestamp']));
       });
 
       this.update_five_min_hrv_chart(
         this[`${data_name}_chart`],
         this[`${data_name}_array`],
-        this[`${data_name}_array_label`]
+        this[`${data_name}_array_label`],
+        'day'
       );
     }
 
@@ -1835,63 +1817,41 @@ export class PersonnelDetailComponent
       new Date().setMonth(temp_month + 1, 1)
     ).setHours(0, 0, 0, 0);
 
-    if (data_name === 'frequency') {
-      let data: any = await this.apiService.getAPI(
-        environment.getFrequencyRatio,
-        this.user_id,
-        month_start_time,
-        month_end_time
-      );
-      if (data.length > 0) {
-        let spectrum = data.map((data) => data[0]);
-        let frequency = data.map((data) => data[1]);
-        let csv = unparse({
-          fields: frequency,
-          data: spectrum,
+    let results = [];
+    let all_data: any = await this.apiService.getAPI(
+      environment.get1DayHrv,
+      this.user_id,
+      month_start_time,
+      month_end_time
+    );
+
+    if (all_data.length > 0) {
+      all_data.forEach((data) => {
+        let get_timestamp = new Date(parseInt(data['timestamp']));
+        let get_month = get_timestamp.getMonth() + 1;
+        let get_date = get_timestamp.getDate();
+
+        let time = `${get_month} / ${get_date}`;
+        results.push({
+          time: time,
+          RMSSD: data['rmssd'],
+          SDNN: data['sdnn'],
+          HRR: data['hrr'],
+          'LF/HF': data['frequency'],
         });
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let file_name = `${this.personnel_current_data.name}_${format(
-          month_start_time,
-          'YYYYMM'
-        )}_frequency_domain_analysis.csv`;
-        saveAs(blob, file_name);
-      }
-    } else {
-      let results = [];
-      let all_data: any = await this.apiService.getAPI(
-        environment.get1DayHrv,
-        this.user_id,
-        month_start_time,
-        month_end_time
-      );
-
-      if (all_data.length > 0) {
-        all_data.forEach((data) => {
-          let get_timestamp = new Date(parseInt(data['timestamp']));
-          let get_month = get_timestamp.getMonth() + 1;
-          let get_date = get_timestamp.getDate();
-
-          let time = `${get_month} / ${get_date}`;
-          results.push({
-            time: time,
-            RMSSD: data['rmssd'],
-            HRR: data['hrr'],
-            SDNN: data['sdnn'],
-          });
-        });
-      }
-
-      let csv = unparse({
-        fields: ['time', 'RMSSD', 'HRR', 'SDNN'],
-        data: results,
       });
-      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      let file_name = `${this.personnel_current_data.name}_${format(
-        month_start_time,
-        'YYYYMM'
-      )}_RMSSD_HRR_SDNN.csv`;
-      saveAs(blob, file_name);
     }
+
+    let csv = unparse({
+      fields: ['time', 'RMSSD', 'SDNN', 'HRR', 'LF/HF'],
+      data: results,
+    });
+    let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    let file_name = `${this.personnel_current_data.name}_${format(
+      month_start_time,
+      'YYYYMM'
+    )}_RMSSD_SDNN_HRR_LFHF.csv`;
+    saveAs(blob, file_name);
 
     this.waiting = false;
   }
@@ -1925,20 +1885,13 @@ export class PersonnelDetailComponent
     if (all_data.length > 0) {
       all_data.forEach((data) => {
         this[`${data_name}_array`].push(data[`${data_name}`]);
-
-        let time = new Date(parseInt(data['timestamp']));
-
-        let get_hours = time.getHours().toString();
-        if (parseInt(get_hours) < 10) {
-          get_hours = `0${get_hours}`;
-        }
-
-        this[`${data_name}_array_label`].push(`${get_hours}:00`);
+        this[`${data_name}_array_label`].push(parseInt(data['timestamp']));
       });
       this.update_five_min_hrv_chart(
         this[`${data_name}_chart`],
         this[`${data_name}_array`],
-        this[`${data_name}_array_label`]
+        this[`${data_name}_array_label`],
+        'hour'
       );
     }
 
@@ -1955,66 +1908,44 @@ export class PersonnelDetailComponent
       this[`${data_name}_day_date`]['value']
     ).getTime();
 
-    if (data_name === 'frequency') {
-      let data: any = await this.apiService.getAPI(
-        environment.getFrequencyRatio,
-        this.user_id,
-        day_start_time,
-        day_end_time
-      );
-      let spectrum = data.map((data) => data[0]);
-      let frequency = data.map((data) => data[1]);
-      if (data.length > 0) {
-        let csv = unparse({
-          fields: frequency,
-          data: spectrum,
+    let results = [];
+    let all_data: any = await this.apiService.getAPI(
+      environment.get1HourHrv,
+      this.user_id,
+      day_start_time,
+      day_end_time
+    );
+
+    if (all_data.length > 0) {
+      all_data.forEach((data) => {
+        let current_time = new Date(parseInt(data['timestamp']));
+        let current_hour =
+          current_time.getHours() < 10
+            ? `0${current_time.getHours().toString()}`
+            : current_time.getHours().toString();
+
+        let time = `${current_hour}:00`;
+        results.push({
+          time: time,
+          RMSSD: data['rmssd'],
+          SDNN: data['sdnn'],
+          HRR: data['hrr'],
+          'LF/HF': data['frequency'],
         });
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let file_name = `${this.personnel_current_data.name}_${format(
-          day_start_time,
-          'YYYYMMDD'
-        )}_frequency_domain_analysis.csv`;
-        saveAs(blob, file_name);
-      }
-    } else {
-      let results = [];
-      let all_data: any = await this.apiService.getAPI(
-        environment.get1HourHrv,
-        this.user_id,
-        day_start_time,
-        day_end_time
-      );
-
-      if (all_data.length > 0) {
-        all_data.forEach((data) => {
-          let get_time = new Date(parseInt(data['timestamp']));
-          let get_hours = get_time.getHours().toString();
-          if (parseInt(get_hours) < 10) {
-            get_hours = `0${get_hours}`;
-          }
-
-          let time = `${get_hours}:00`;
-          results.push({
-            time: time,
-            RMSSD: data['rmssd'],
-            HRR: data['hrr'],
-            SDNN: data['sdnn'],
-          });
-        });
-      }
-
-      let csv = unparse({
-        fields: ['time', 'RMSSD', 'HRR', 'SDNN'],
-        data: results,
       });
-      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      let file_name = `${this.personnel_current_data.name}_${format(
-        day_start_time,
-        'YYYYMMDD'
-      )}-Day_RMSSD_HRR_SDNN.csv`;
-      saveAs(blob, file_name);
-      this.waiting = false;
     }
+
+    let csv = unparse({
+      fields: ['time', 'RMSSD', 'SDNN', 'HRR', 'LF/HF'],
+      data: results,
+    });
+    let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    let file_name = `${this.personnel_current_data.name}_${format(
+      day_start_time,
+      'YYYYMMDD'
+    )}-Day_RMSSD_SDNN_HRR_LFHF.csv`;
+    saveAs(blob, file_name);
+    this.waiting = false;
   }
 
   async search_time(data_name: string) {
@@ -2039,16 +1970,9 @@ export class PersonnelDetailComponent
     if (all_data.length > 0) {
       all_data.forEach((data) => {
         this[`${data_name}_array`].push(data[`${data_name}`]);
-
-        let get_time = new Date(parseInt(data['timestamp']));
-
-        let get_hours = get_time.getHours().toString();
-        if (parseInt(get_hours) < 10) {
-          get_hours = `0${get_hours}`;
-        }
-
-        this[`${data_name}_array_label`].push(`${get_hours} : 00`);
+        this[`${data_name}_array_label`].push(parseInt(data['timestamp']));
       });
+
       this.update_five_min_hrv_chart(
         this[`${data_name}_chart`],
         this[`${data_name}_array`],
@@ -2062,70 +1986,49 @@ export class PersonnelDetailComponent
   async export_time(data_name: string) {
     this.waiting = true;
 
-    if (data_name === 'frequency') {
-      let data: any = await this.apiService.getAPI(
-        environment.getFrequencyRatio,
-        this.user_id,
-        Date.parse(this[`${data_name}_start_time`]),
-        Date.parse(this[`${data_name}_end_time`])
-      );
+    let results = [];
+    let all_data: any = await this.apiService.getAPI(
+      environment.get5MinuteHrv,
+      this.user_id,
+      Date.parse(this[`${data_name}_start_time`]),
+      Date.parse(this[`${data_name}_end_time`])
+    );
+    if (all_data.length > 0) {
+      all_data.forEach((data) => {
+        let current_time = new Date(parseInt(data['timestamp']));
+        let current_hour =
+          current_time.getHours() < 10
+            ? `0${current_time.getHours().toString()}`
+            : current_time.getHours().toString();
+        let current_minute =
+          current_time.getMinutes() < 10
+            ? `0${current_time.getMinutes().toString()}`
+            : current_time.getMinutes().toString();
 
-      if (data.length > 0) {
-        let spectrum = data.map((data) => data[0]);
-        let frequency = data.map((data) => data[1]);
-        let csv = unparse({
-          fields: frequency,
-          data: spectrum,
+        let time = `${current_hour} : ${current_minute}`;
+        results.push({
+          time: time,
+          RMSSD: data['rmssd'],
+          SDNN: data['sdnn'],
+          HRR: data['hrr'],
+          'LF/HF': data['frequency'],
         });
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let file_name = `${this.personnel_current_data.name}_${format(
-          this[`${data_name}_start_time`],
-          'YYYYMMDD(HHmm)'
-        )}-${format(
-          this[`${data_name}_end_time`],
-          'YYYYMMDD(HHmm)'
-        )}_frequency_domain_analysis.csv`;
-        saveAs(blob, file_name);
-      }
-    } else {
-      let results = [];
-      let all_data: any = await this.apiService.getAPI(
-        environment.get5MinuteHrv,
-        this.user_id,
-        Date.parse(this[`${data_name}_start_time`]),
-        Date.parse(this[`${data_name}_end_time`])
-      );
-      if (all_data.length > 0) {
-        all_data.forEach((data) => {
-          let get_time = new Date(parseInt(data['timestamp']));
-          let get_hours = get_time.getHours().toString();
-          if (parseInt(get_hours) < 10) {
-            get_hours = `0${get_hours}`;
-          }
-
-          let time = `${get_hours} : 00`;
-          results.push({
-            time: time,
-            RMSSD: data['rmssd'],
-            HRR: data['hrr'],
-            SDNN: data['sdnn'],
-          });
-        });
-      }
-      let csv = unparse({
-        fields: ['time', 'RMSSD', 'HRR', 'SDNN'],
-        data: results,
       });
-      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      let file_name = `${this.personnel_current_data.name}_${format(
-        this[`${data_name}_start_time`],
-        'YYYYMMDD(HHmm)'
-      )}-${format(
-        this[`${data_name}_end_time`],
-        'YYYYMMDD(HHmm)'
-      )}_RMSSD_HRR_SDNN.csv`;
-      saveAs(blob, file_name);
     }
+    let csv = unparse({
+      fields: ['time', 'RMSSD', 'SDNN', 'HRR', 'LF/HF'],
+      data: results,
+    });
+    let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    let file_name = `${this.personnel_current_data.name}_${format(
+      this[`${data_name}_start_time`],
+      'YYYYMMDD(HHmm)'
+    )}-${format(
+      this[`${data_name}_end_time`],
+      'YYYYMMDD(HHmm)'
+    )}_RMSSD_SDNN_HRR_LFHF.csv`;
+    saveAs(blob, file_name);
+
     this.waiting = false;
   }
 
@@ -2181,13 +2084,8 @@ export class PersonnelDetailComponent
     hrv_interval_array.forEach((hrv_interval) => {
       if (hrv_interval.data) {
         this.update_hrv_chart(hrv_interval.interval, hrv_interval.data);
-        // this.update_frequency_chart(
-        //   hrv_interval.interval,
-        //   hrv_interval.frequency_data
-        // );
       } else {
         this.get_hrv_data();
-        this.get_frequency_data();
       }
     });
 

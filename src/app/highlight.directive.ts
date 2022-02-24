@@ -100,7 +100,7 @@ export class HighlightDirective implements OnChanges {
       this.personnel['hrr'] = 0;
       this.personnel['rmssd'] = 0;
       this.personnel['sdnn'] = 0;
-      this.personnel['ratio'] = 0;
+      this.personnel['frequency'] = 0;
     }
     return colorClass;
   }

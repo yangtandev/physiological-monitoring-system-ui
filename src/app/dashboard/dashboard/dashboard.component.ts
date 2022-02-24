@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         currentData['hrr'] = 0;
         currentData['rmssd'] = 0;
         currentData['sdnn'] = 0;
-        currentData['ratio'] = 0;
+        currentData['frequency'] = 0;
       });
     }
   }
