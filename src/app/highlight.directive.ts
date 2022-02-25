@@ -56,18 +56,19 @@ export class HighlightDirective implements OnChanges {
   }
 
   getColor(): string {
-    const today = new Date();
-    let age = 40,
-      birthday = new Date();
-    if (this.personnel && this.personnel['birthday']) {
-      birthday = new Date(this.personnel['birthday']);
-      age = today.getFullYear() - birthday.getFullYear();
+    let age = 40;
+    if (this.personnel) {
+      const current = new Date();
+      const birthday = new Date(parseInt(this.personnel['birthday'], 10));
+      age = current.getFullYear() - birthday.getFullYear();
+      const month_difference = current.getMonth() - birthday.getMonth();
+      if (
+        month_difference < 0 ||
+        (month_difference === 0 && current.getDate() < birthday.getDate())
+      ) {
+        age--;
+      }
     }
-    const m = today.getMonth() - birthday.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
-      age--;
-    }
-
     const maxHr = 206.9 - 0.67 * age;
     const moderate = this.personnel.hr > maxHr * 0.5;
     const intense = this.personnel.hr > maxHr * 0.7;

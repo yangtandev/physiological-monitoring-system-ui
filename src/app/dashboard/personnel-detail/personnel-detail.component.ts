@@ -352,11 +352,16 @@ export class PersonnelDetailComponent
   }
 
   init_frequency_chart() {
+    /* 
+      修訂日期: 20220225
+      第一階段: 1 個標準差
+      第二階段: 1.25 個標準差 
+    */
     const limit = {
-      highest: 3.2,
-      higher: 2.8,
-      lower: 0.5,
-      lowest: 0.1,
+      highest: 3.08,
+      higher: 2.79,
+      lower: 0.47,
+      lowest: 0.18,
     };
     let config = {
       type: 'line',
@@ -485,7 +490,7 @@ export class PersonnelDetailComponent
                 beginAtZero: true,
                 max: 4,
                 min: 0,
-                stepSize: 0.1,
+                stepSize: 0.01,
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.highest) {
@@ -548,15 +553,26 @@ export class PersonnelDetailComponent
         {
           beforeDraw: function (chart) {
             const ctx = chart.chart.ctx;
-            const yaxis = chart.chart.scales['frequency_left'];
+            const yaxis = chart.chart.scales['frequency_right'];
             const xaxis = chart.chart.scales['time'];
             const max = yaxis.end;
             const one_unit = (1 / yaxis.end) * yaxis.height;
-
-            const normal_range = { height: one_unit * 2.3, color: '#006374' };
-            const lower_limit = { height: one_unit * 0.4, color: '#00477D' };
-            const lowest_limit = { height: one_unit * 0.1, color: '#003153' };
-            const higher_limit = { height: one_unit * 0.4, color: '#00477D' };
+            const lowest_limit = {
+              height: one_unit * limit.lowest,
+              color: '#003153',
+            };
+            const lower_limit = {
+              height: one_unit * (limit.lower - limit.lowest),
+              color: '#00477D',
+            };
+            const normal_range = {
+              height: one_unit * (limit.higher - limit.lower),
+              color: '#006374',
+            };
+            const higher_limit = {
+              height: one_unit * (limit.highest - limit.higher),
+              color: '#00477D',
+            };
             const highest_limit = {
               height:
                 yaxis.height -
@@ -589,8 +605,13 @@ export class PersonnelDetailComponent
   }
 
   init_rmssd_chart() {
+    /* 
+      修訂日期: 20220225
+      第一階段: 1.25 個標準差
+      第二階段: 1.5 個標準差 
+    */
     const limit = {
-      mid: 13.8,
+      mid: 8.2,
       low: 2.7,
     };
     let config = {
@@ -812,9 +833,14 @@ export class PersonnelDetailComponent
   }
 
   init_sdnn_chart() {
+    /* 
+      修訂日期: 20220225
+      第一階段: 1.75 個標準差
+      第二階段: 2.25 個標準差 
+    */
     const limit = {
-      mid: 17.5,
-      low: 8.6,
+      mid: 13.1,
+      low: 4.3,
     };
     let config = {
       type: 'line',
@@ -1972,6 +1998,20 @@ export class PersonnelDetailComponent
         this[`${data_name}_array`].push(data[`${data_name}`]);
         this[`${data_name}_array_label`].push(parseInt(data['timestamp']));
       });
+      const one_min = 60000;
+      const five_min = one_min * 5;
+      const current_timestamp =
+        Math.floor(this[`${data_name}_array_label`][0] / 10000) * 10000;
+      const time_gap = current_timestamp % five_min;
+
+      if (time_gap > 0) {
+        const compensation = (five_min - time_gap) / one_min;
+
+        for (let i = 1; i <= compensation; i++) {
+          this[`${data_name}_array`].shift();
+          this[`${data_name}_array_label`].shift();
+        }
+      }
 
       this.update_five_min_hrv_chart(
         this[`${data_name}_chart`],
