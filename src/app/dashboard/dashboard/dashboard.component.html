@@ -311,9 +311,9 @@
             style="border: 3px solid white; border-radius: 0.5rem"
             [ngStyle]="{
               border:
-                r.rmssd > 0 && r.rmssd <= 2.7
+                r.rmssd > 0 && r.rmssd <= 2.67
                   ? '3px solid red'
-                  : r.rmssd > 2.7 && r.rmssd <= 8.2
+                  : r.rmssd > 2.67 && r.rmssd <= 8.21
                   ? '3px solid orange'
                   : '3px solid white'
             }"
@@ -338,9 +338,9 @@
             style="border-radius: 0.5rem; margin-left: 5%"
             [ngStyle]="{
               border:
-                r.sdnn > 0 && r.sdnn <= 4.3
+                r.sdnn > 0 && r.sdnn <= 4.25
                   ? '3px solid red'
-                  : r.sdnn > 4.3 && r.sdnn <= 13.1
+                  : r.sdnn > 4.25 && r.sdnn <= 8.67
                   ? '3px solid orange'
                   : '3px solid white'
             }"
@@ -414,56 +414,6 @@
             </p>
           </div>
         </div>
-
-        <!-- <h1 *ngIf="r.hr !== 0; else noHr" fxFlex="none"
-                    style='font-weight: 200; font-size: 3rem; margin:0;'>
-                    <div style='font-weight: 30;font-size: 2rem;'>
-                        <span style='font-weight: 30;font-size: 1rem;'>HR　: </span>{{r.hr}}
-                    </div>
-                    <div *ngIf='r.rmssd != undefined' style='font-weight: 30;font-size: 2rem;'>
-                        <span style='font-weight: 30;font-size: 1rem;'>RMSSD : </span>{{r.rmssd.slice(-1)}}
-                    </div>
-                    <div *ngIf='r.sdnn != undefined' style='font-weight: 30;font-size: 2rem;'>
-                        <span style='font-weight: 30;font-size: 1rem;'>SDNN : </span>{{r.sdnn.slice(-1)}}
-                    </div>
-                    <div *ngIf='r.hrr != undefined' style='font-weight: 30;font-size: 2rem;'>
-                        <span style='font-weight: 30;font-size: 1rem;'>%HRR : </span>{{r.hrr.slice(-1)}}
-                    </div>
-                </h1> -->
-
-        <!-- <ng-template #noHr>
-                    <h1 style='font-weight: 200; font-size: 3rem; margin:0;'>
-                        <div>
-                            <span style='font-weight: 70;font-size: 2rem;'></span>No signal
-                        </div>
-                        <div *ngIf='r.rmssd != undefined'>
-                            <span style='font-weight: 50;font-size: 1rem;'></span> 
-                        </div>
-                        <div *ngIf='r.hrr != undefined'>
-                            <span style='font-weight: 50;font-size: 1rem;'></span>
-                        </div>
-                    </h1>
-                </ng-template> -->
-
-        <!-- <div fxFlex="none" style='text-align: right; margin-bottom:2rem;' *ngIf='r.hr !== 0; else noHr1'> -->
-
-        <!-- <app-battery [battery]='r.battery' style="margin-right:0rem;"></app-battery> -->
-        <!-- <span>{{r.battery}}%</span><br> -->
-        <!-- <span>{{r.rssi}}</span> -->
-        <!-- <app-rssi [rssi]='r.rssi' style="margin-right:0rem;"></app-rssi> -->
-        <!-- <div>{{r.rssi}}</div> -->
-        <!-- <div style="margin-top:0.3rem;" *ngIf='r.mac != undefined'>{{r.mac.slice(12)}}</div> -->
-        <!-- <div style="margin-top:0.3rem;">{{r.gateway}}</div> -->
-        <!-- <div style="margin-top:0.3rem;">{{r.timestamp | customDate}}</div> -->
-        <!-- </div> -->
-        <!-- <ng-template #noHr1>
-                    <div style='text-align: right; margin-bottom:2rem;' >
-                        <app-battery [battery]=0 style="margin-right:0rem;"></app-battery>
-                        <span>{{0}}%</span><br>
-                        <app-rssi [rssi]=-999 style="margin-right:0rem;"></app-rssi>
-                        <div style="margin-top:0.3rem;" *ngIf='r.mac != undefined'>{{r.mac.slice(12)}}</div>
-                    </div>
-                </ng-template> -->
       </mat-card-content>
     </mat-card>
   </div>

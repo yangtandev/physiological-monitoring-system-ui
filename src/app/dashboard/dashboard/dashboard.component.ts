@@ -100,10 +100,16 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.allCurrentData = await this.apiService.getAPI(
           environment.getAllCurrentData
         );
-        this.allCurrentData
+        this.allCurrentData = this.allCurrentData
           .reverse()
           .filter((data) => !res.has(data.user_id) && res.set(data.user_id, 1))
-          .reverse();
+          .reverse()
+          .map((data) => ({
+            ...data,
+            rmssd: Math.round(data.rmssd * 10) / 10,
+            sdnn: Math.round(data.sdnn * 10) / 10,
+            hrr: Math.round(data.hrr * 10) / 10,
+          }));
 
         if (this.allCurrentData.length > 0) {
           for (let currentData of this.allCurrentData) {

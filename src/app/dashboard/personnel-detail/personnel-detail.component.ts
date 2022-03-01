@@ -611,8 +611,8 @@ export class PersonnelDetailComponent
       第二階段: 1.5 個標準差 
     */
     const limit = {
-      mid: 8.2,
-      low: 2.7,
+      mid: 8.21,
+      low: 2.67,
     };
     let config = {
       type: 'line',
@@ -741,7 +741,7 @@ export class PersonnelDetailComponent
                 beginAtZero: true,
                 max: 100,
                 min: 0,
-                stepSize: 0.1,
+                stepSize: 0.01,
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.low) {
@@ -834,13 +834,13 @@ export class PersonnelDetailComponent
 
   init_sdnn_chart() {
     /* 
-      修訂日期: 20220225
-      第一階段: 1.75 個標準差
+      修訂日期: 20220301
+      第一階段: 2 個標準差
       第二階段: 2.25 個標準差 
     */
     const limit = {
-      mid: 13.1,
-      low: 4.3,
+      mid: 8.67,
+      low: 4.25,
     };
     let config = {
       type: 'line',
@@ -969,7 +969,7 @@ export class PersonnelDetailComponent
                 beginAtZero: true,
                 max: 100,
                 min: 0,
-                stepSize: 0.1,
+                stepSize: 0.01,
                 autoSkip: false,
 
                 callback: function (label, index, labels) {
