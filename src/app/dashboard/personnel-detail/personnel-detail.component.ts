@@ -72,7 +72,6 @@ export const MY_FORMATS = {
 export class PersonnelDetailComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  subscribing: boolean = true;
   birthday: any;
   data: any;
   personnel_current_data: any = [];
@@ -89,17 +88,13 @@ export class PersonnelDetailComponent
   max_month_date = new Date(); //目前時間
   max_day_date = new Date(); //目前時間
 
-  // frequency
-  frequency_day_data: any;
-  frequency_week_data: any;
-  frequency_month_data: any;
-
   // hrv
   hrv_day_data: any;
   hrv_week_data: any;
   hrv_month_data: any;
 
   // hr
+  hr_subscribing: boolean = true;
   chart_hr: Chart;
   hr_start_time: Date;
   hr_end_time: Date;
@@ -112,6 +107,7 @@ export class PersonnelDetailComponent
   last_month_hr_min: any;
 
   //frequency
+  frequency_subscribing: boolean = true;
   frequency_chart: Chart;
   frequency_array: any = [];
   frequency_start_time: Date;
@@ -124,6 +120,7 @@ export class PersonnelDetailComponent
   frequency_day_date = new FormControl(moment());
 
   //rmssd
+  rmssd_subscribing: boolean = true;
   rmssd_chart: Chart;
   rmssd_array: any = [];
   rmssd_start_time: Date;
@@ -136,6 +133,7 @@ export class PersonnelDetailComponent
   rmssd_day_date = new FormControl(moment());
 
   //SDNN
+  sdnn_subscribing: boolean = true;
   sdnn_chart: Chart;
   sdnn_array: any = [];
   sdnn_start_time: Date;
@@ -148,6 +146,7 @@ export class PersonnelDetailComponent
   sdnn_day_date = new FormControl(moment());
 
   //hrr
+  hrr_subscribing: boolean = true;
   hrr_chart: Chart;
   hrr_array: any = [];
   hrr_start_time: Date;
@@ -205,16 +204,17 @@ export class PersonnelDetailComponent
         new Date(parseInt(this.personnel_current_data.birthday)).getFullYear()
       : 40;
 
-    await Promise.all([
-      this.query_hrv_data(),
+    let all_promise: any = [
       this.query_percent_hrr_day_data(),
       this.get_hr_data(),
-      this.get_hrv_data(),
-    ]);
+    ];
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 60000);
+    for await (let data_name of ['frequency', 'rmssd', 'sdnn', 'hrr']) {
+      all_promise.push(this.query_hrv_data(data_name));
+      all_promise.push(this.get_hrv_data(data_name));
+    }
+
+    await Promise.all(all_promise);
   }
 
   ngAfterViewInit() {
@@ -240,7 +240,9 @@ export class PersonnelDetailComponent
   }
 
   ngOnDestroy() {
-    this.subscribing = false;
+    // for (let data_name of ['hr', 'frequency', 'rmssd', 'sdnn', 'hrr']) {
+    //   this[`${data_name}_subscribing`] = false;
+    // }
   }
 
   async init_hr_chart() {
@@ -362,6 +364,7 @@ export class PersonnelDetailComponent
       higher: 2.79,
       lower: 0.47,
       lowest: 0.18,
+      max: 3.5,
     };
     let config = {
       type: 'line',
@@ -469,7 +472,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 beginAtZero: true,
-                max: 4,
+                max: limit.max,
                 min: 0,
                 stepSize: 0.5,
                 autoSkip: false,
@@ -488,7 +491,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 16,
                 beginAtZero: true,
-                max: 4,
+                max: limit.max,
                 min: 0,
                 stepSize: 0.01,
                 autoSkip: false,
@@ -611,8 +614,9 @@ export class PersonnelDetailComponent
       第二階段: 1.5 個標準差 
     */
     const limit = {
-      mid: 8.21,
-      low: 2.67,
+      lower: 8.21,
+      lowest: 2.67,
+      max: 80,
     };
     let config = {
       type: 'line',
@@ -632,14 +636,14 @@ export class PersonnelDetailComponent
             pointRadius: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 7.5;
               }
             },
             pointBackgroundColor: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 'transparent';
               } else {
                 return '#00FFEF';
@@ -648,16 +652,16 @@ export class PersonnelDetailComponent
             pointBorderColor: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value < limit.low) {
+              if (value < limit.lowest) {
                 return 'red';
-              } else if (value <= limit.mid) {
+              } else if (value <= limit.lower) {
                 return 'orange';
               }
             },
             pointBorderWidth: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 2.5;
               }
             },
@@ -721,7 +725,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 beginAtZero: true,
-                max: 100,
+                max: limit.max,
                 min: 0,
                 stepSize: 10,
               },
@@ -739,14 +743,14 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 16,
                 beginAtZero: true,
-                max: 100,
+                max: limit.max,
                 min: 0,
                 stepSize: 0.01,
                 autoSkip: false,
                 callback: function (label, index, labels) {
-                  if (label === limit.low) {
+                  if (label === limit.lowest) {
                     return '▼過勞';
-                  } else if (label === limit.mid) {
+                  } else if (label === limit.lower) {
                     return '▼疲勞';
                   }
                 },
@@ -805,11 +809,11 @@ export class PersonnelDetailComponent
             const max = yaxis.end;
             const one_unit = (1 / yaxis.end) * yaxis.height;
             const mid_limit = {
-              height: one_unit * (limit.mid - limit.low),
+              height: one_unit * (limit.lower - limit.lowest),
               color: '#00477D',
             };
             const low_limit = {
-              height: one_unit * limit.low,
+              height: one_unit * limit.lowest,
               color: '#003153',
             };
             const margin = {
@@ -839,8 +843,9 @@ export class PersonnelDetailComponent
       第二階段: 2.25 個標準差 
     */
     const limit = {
-      mid: 8.67,
-      low: 4.25,
+      lower: 8.67,
+      lowest: 4.25,
+      max: 80,
     };
     let config = {
       type: 'line',
@@ -860,14 +865,14 @@ export class PersonnelDetailComponent
             pointRadius: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 7.5;
               }
             },
             pointBackgroundColor: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 'transparent';
               } else {
                 return '#00FFEF';
@@ -876,16 +881,16 @@ export class PersonnelDetailComponent
             pointBorderColor: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.low) {
+              if (value <= limit.lowest) {
                 return 'red';
-              } else if (value <= limit.mid) {
+              } else if (value <= limit.lower) {
                 return 'orange';
               }
             },
             pointBorderWidth: (context) => {
               let index = context.dataIndex;
               let value = context.dataset.data[index];
-              if (value <= limit.mid) {
+              if (value <= limit.lower) {
                 return 2.5;
               }
             },
@@ -949,7 +954,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 beginAtZero: true,
-                max: 100,
+                max: limit.max,
                 min: 0,
                 stepSize: 10,
               },
@@ -967,15 +972,15 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 16,
                 beginAtZero: true,
-                max: 100,
+                max: limit.max,
                 min: 0,
                 stepSize: 0.01,
                 autoSkip: false,
 
                 callback: function (label, index, labels) {
-                  if (label === limit.low) {
+                  if (label === limit.lowest) {
                     return '▼過勞';
-                  } else if (label === limit.mid) {
+                  } else if (label === limit.lower) {
                     return '▼疲勞';
                   }
                 },
@@ -1034,11 +1039,11 @@ export class PersonnelDetailComponent
             const max = yaxis.end;
             const one_unit = (1 / yaxis.end) * yaxis.height;
             const mid_limit = {
-              height: one_unit * (limit.mid - limit.low),
+              height: one_unit * (limit.lower - limit.lowest),
               color: '#00477D',
             };
             const low_limit = {
-              height: one_unit * limit.low,
+              height: one_unit * limit.lowest,
               color: '#003153',
             };
             const margin = {
@@ -1406,7 +1411,7 @@ export class PersonnelDetailComponent
     this.last_month_hr_min = hr_month_data ? hr_month_data.min_hr : null;
   }
 
-  async get_hrv_data() {
+  async get_hrv_data(data_name: string) {
     const hrv_interval_array = [
       {
         interval: 'day',
@@ -1441,86 +1446,81 @@ export class PersonnelDetailComponent
       );
 
       if (hrv_interval.data) {
-        this.update_hrv_chart(hrv_interval.interval, hrv_interval.data);
+        this.update_hrv_chart(
+          hrv_interval.interval,
+          hrv_interval.data,
+          data_name
+        );
       } else {
         hrv_interval.data = null;
       }
     }
   }
 
-  query_hrv_data() {
-    timer(0, 300000).subscribe(async () => {
-      this.data = await this.apiService.getAPI(
-        environment.get5MinuteHrv,
-        this.user_id,
-        new Date().setHours(
-          new Date().getHours() - 1,
-          new Date().getMinutes(),
-          0,
-          0
-        ),
-        Date.now()
-      );
+  query_hrv_data(data_name: string) {
+    timer(0, 60000)
+      .pipe(takeWhile(() => this[`${data_name}_subscribing`]))
+      .subscribe(async () => {
+        this.data = await this.apiService.getAPI(
+          environment.get5MinuteHrv,
+          this.user_id,
+          new Date().setHours(
+            new Date().getHours() - 1,
+            new Date().getMinutes(),
+            0,
+            0
+          ),
+          Date.now()
+        );
 
-      if (this.data.length > 0) {
-        const hrr_array = [];
-        const rmssd_array = [];
-        const sdnn_array = [];
-        const frequency_array = [];
-        const five_minute_label_array = [];
+        if (this.data.length > 0) {
+          const hrv_array = [];
+          const five_minute_label_array = [];
 
-        for (let data of this.data) {
-          hrr_array.push(data.hrr);
-          rmssd_array.push(data.rmssd);
-          sdnn_array.push(data.sdnn);
-          frequency_array.push(data.frequency);
-          five_minute_label_array.push(parseInt(data.timestamp, 10));
-        }
+          for (let data of this.data) {
+            hrv_array.push(data[`${data_name}`]);
+            five_minute_label_array.push(parseInt(data.timestamp, 10));
+          }
 
-        const one_min = 60000;
-        const five_min = one_min * 5;
-        const current_timestamp =
-          Math.floor(five_minute_label_array[0] / 10000) * 10000;
-        const time_gap = current_timestamp % five_min;
+          const one_min = 60000;
+          const five_min = one_min * 5;
+          const current_timestamp =
+            Math.floor(five_minute_label_array[0] / 10000) * 10000;
+          const time_gap = current_timestamp % five_min;
 
-        if (time_gap > 0) {
-          const compensation = (five_min - time_gap) / one_min;
+          if (time_gap > 0) {
+            /* 
+            過濾資料直至找到第一筆符合 300000 (五分鐘)倍數的 timestamp 後，
+            接下來皆以五分鐘為單位顯示，並且至少需存在三筆資料(以構成曲線)。 
+          */
+            if (five_minute_label_array.length >= 6) {
+              const compensation = (five_min - time_gap) / one_min;
 
-          for (let i = 1; i <= compensation; i++) {
-            hrr_array.shift();
-            rmssd_array.shift();
-            sdnn_array.shift();
-            frequency_array.shift();
-            five_minute_label_array.shift();
+              for (let i = 1; i <= compensation; i++) {
+                hrv_array.shift();
+                five_minute_label_array.shift();
+              }
+            } else {
+              /* 
+              去除無法完整計算到的第一筆資料，並在找到符合 300000 (五分鐘)倍數的 timestamp 前， 
+              先顯示所有 timestamp，避免畫面太空。
+            */
+              hrv_array.shift();
+              five_minute_label_array.shift();
+            }
+          }
+
+          if (five_minute_label_array.length > 0) {
+            this.update_five_min_hrv_chart(
+              this[`${data_name}_chart`],
+              hrv_array,
+              five_minute_label_array
+            );
           }
         }
 
-        const chart_array = [
-          { chart: this.hrr_chart, data: hrr_array, name: 'hrr' },
-          { chart: this.rmssd_chart, data: rmssd_array, name: 'rmssd' },
-          { chart: this.sdnn_chart, data: sdnn_array, name: 'sdnn' },
-          {
-            chart: this.frequency_chart,
-            data: frequency_array,
-            name: 'frequency',
-          },
-        ];
-
-        if (five_minute_label_array.length > 0) {
-          chart_array.forEach((chart) => {
-            this.update_five_min_hrv_chart(
-              chart.chart,
-              chart.data,
-              five_minute_label_array
-            );
-          });
-        }
-      }
-
-      ['frequency', 'rmssd', 'sdnn', 'hrr'].forEach((chart) => {
-        this[`${chart}_loading`] = false;
+        this[`${data_name}_loading`] = false;
       });
-    });
   }
 
   async query_percent_hrr_day_data() {
@@ -1551,9 +1551,8 @@ export class PersonnelDetailComponent
   }
 
   update_hr_chart() {
-    //let hp_count;
-    timer(1000, 2000)
-      .pipe(takeWhile(() => this.subscribing))
+    timer(0, 2000)
+      .pipe(takeWhile(() => this.hr_subscribing))
       .subscribe(async () => {
         let current_data: any = await this.apiService.getAPI(
           environment.getCurrentData,
@@ -1641,38 +1640,34 @@ export class PersonnelDetailComponent
     chart.update();
   }
 
-  update_hrv_chart(interval: string, data_obj: any) {
+  update_hrv_chart(interval: string, data_obj: any, data_name: string) {
     let interval_obj = { day: 2, week: 3, month: 4 };
-    let chart_obj = {
-      hrr: this.hrr_chart,
-      rmssd: this.rmssd_chart,
-      sdnn: this.sdnn_chart,
-      frequency: this.frequency_chart,
-    };
-    Object.keys(chart_obj).forEach((chart_name) => {
-      let chart = chart_obj[chart_name];
 
-      Object.assign(chart.config.options.scales.xAxes[1].labels, ['', '']);
-      Object.assign(chart.config.data.datasets[interval_obj[interval]].data, [
-        data_obj[chart_name],
-        data_obj[chart_name],
-      ]);
-      chart.update();
-    });
+    Object.assign(
+      this[`${data_name}_chart`].config.options.scales.xAxes[1].labels,
+      ['', '']
+    );
+    Object.assign(
+      this[`${data_name}_chart`].config.data.datasets[interval_obj[interval]]
+        .data,
+      [data_obj[data_name], data_obj[data_name]]
+    );
+    this[`${data_name}_chart`].update();
   }
 
   change_status(data_name: string) {
     if (data_name === 'hr') {
-      this.subscribing = !this.subscribing;
+      this.hr_subscribing = !this.hr_subscribing;
       this.init_hr_chart();
+    } else {
+      this[`${data_name}_subscribing`] = !this[`${data_name}_subscribing`];
+      this.query_hrv_data(data_name);
+      this[`init_${data_name}_chart`]();
     }
-    this[`${data_name}_subscribing`] = !this[`${data_name}_subscribing`];
-    this.query_hrv_data();
-    this[`init_${data_name}_chart`]();
   }
 
   async search_hr() {
-    this.subscribing = false;
+    this.hr_subscribing = false;
     this.hr_loading = true;
     let all_data: any = await this.apiService.getAPI(
       environment.get5MinuteHr,
@@ -1784,6 +1779,7 @@ export class PersonnelDetailComponent
   }
 
   async search_month(data_name: string) {
+    this[`${data_name}_subscribing`] = false;
     let index = 1;
     do {
       this[`${data_name}_chart`].data.datasets[index].showLine = false;
@@ -1883,6 +1879,7 @@ export class PersonnelDetailComponent
   }
 
   async search_day(data_name: string) {
+    this[`${data_name}_subscribing`] = false;
     let index = 1;
     do {
       this[`${data_name}_chart`].data.datasets[index].showLine = false;
@@ -1975,6 +1972,7 @@ export class PersonnelDetailComponent
   }
 
   async search_time(data_name: string) {
+    this[`${data_name}_subscribing`] = false;
     let index = 1;
     do {
       this[`${data_name}_chart`].data.datasets[index].showLine = false;
@@ -2089,92 +2087,33 @@ export class PersonnelDetailComponent
     datepicker.close();
   }
 
-  clear_time() {
-    [
-      this.rmssd_chart,
-      this.sdnn_chart,
-      this.hrr_chart,
-      this.frequency_chart,
-    ].forEach((chart) => {
-      let index = 1;
-      do {
-        chart.data.datasets[index].showLine = true;
-        chart.data.datasets[index].radius = 3;
-        index++;
-      } while (index <= 3);
-    });
-
-    let hrv_interval_array = [
-      {
-        interval: 'day',
-        data: this.hrv_day_data,
-        frequency_data: this.frequency_day_data,
-      },
-      {
-        interval: 'week',
-        data: this.hrv_week_data,
-        frequency_data: this.frequency_week_data,
-      },
-      {
-        interval: 'month',
-        data: this.hrv_month_data,
-        frequency_data: this.frequency_month_data,
-      },
-    ];
-    hrv_interval_array.forEach((hrv_interval) => {
-      if (hrv_interval.data) {
-        this.update_hrv_chart(hrv_interval.interval, hrv_interval.data);
-      } else {
-        this.get_hrv_data();
+  async clear_time(data_name: string) {
+    if (data_name === 'hr') {
+      this.hr_subscribing = true;
+      await this.init_hr_chart();
+    } else {
+      for (let i = 1; i < 3; i++) {
+        this[`${data_name}_subscribing`] = true;
+        this[`${data_name}_chart`].data.datasets[i].showLine = true;
+        this[`${data_name}_chart`].data.datasets[i].radius = 3;
       }
-    });
 
-    this.hr_start_time = null;
-    this.hr_end_time = null;
-    this.hr_start_max_date = new Date();
-    this.hr_start_min_date = null;
-    this.hr_end_max_date = new Date();
-    this.hr_end_min_date = null;
+      await this.query_hrv_data(data_name);
 
-    this.frequency_start_time = null;
-    this.frequency_end_time = null;
-    this.frequency_start_max_date = new Date();
-    this.frequency_start_min_date = null;
-    this.frequency_end_max_date = new Date();
-    this.frequency_end_min_date = null;
+      this[`${data_name}_start_max_date`] = new Date();
+      this[`${data_name}_start_min_date`] = null;
+      this[`${data_name}_end_max_date`] = new Date();
+      this[`${data_name}_end_min_date`] = null;
 
-    this.rmssd_start_time = null;
-    this.rmssd_end_time = null;
-    this.rmssd_start_max_date = new Date();
-    this.rmssd_start_min_date = null;
-    this.rmssd_end_max_date = new Date();
-    this.rmssd_end_min_date = null;
+      this.max_day_date = new Date();
+      this[`${data_name}_day_date`] = new FormControl(moment());
 
-    this.sdnn_start_time = null;
-    this.sdnn_end_time = null;
-    this.sdnn_start_max_date = new Date();
-    this.sdnn_start_min_date = null;
-    this.sdnn_end_max_date = new Date();
-    this.sdnn_end_min_date = null;
+      this.max_month_date = new Date();
+      this[`${data_name}_month_date`] = new FormControl(moment());
+    }
 
-    this.hrr_start_time = null;
-    this.hrr_end_time = null;
-    this.hrr_start_max_date = new Date();
-    this.hrr_start_min_date = null;
-    this.hrr_end_max_date = new Date();
-    this.hrr_end_min_date = null;
-
-    this.max_day_date = new Date();
-    this.frequency_day_date = new FormControl(moment());
-    this.rmssd_day_date = new FormControl(moment());
-    this.hrr_day_date = new FormControl(moment());
-    this.sdnn_day_date = new FormControl(moment());
-
-    this.max_month_date = new Date();
-    this.frequency_month_date = new FormControl(moment());
-    this.rmssd_month_date = new FormControl(moment());
-    this.sdnn_month_date = new FormControl(moment());
-    this.hrr_month_date = new FormControl(moment());
+    this[`${data_name}_start_time`] = null;
+    this[`${data_name}_end_time`] = null;
   }
 
   change_start_time(val, data_name: string, number: number = 0) {

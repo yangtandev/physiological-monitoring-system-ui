@@ -109,6 +109,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             rmssd: Math.round(data.rmssd * 10) / 10,
             sdnn: Math.round(data.sdnn * 10) / 10,
             hrr: Math.round(data.hrr * 10) / 10,
+            frequency: Math.round(data.frequency * 100) / 100,
           }));
 
         if (this.allCurrentData.length > 0) {
