@@ -199,10 +199,24 @@ export class PersonnelDetailComponent
       this.user_id
     );
 
-    this.birthday = this.personnel_current_data.birthday
-      ? new Date().getFullYear() -
-        new Date(parseInt(this.personnel_current_data.birthday)).getFullYear()
-      : 40;
+    this.birthday = (() => {
+      let age = 40;
+      if (this.personnel_current_data.birthday) {
+        const current = new Date();
+        const birthday = new Date(
+          parseInt(this.personnel_current_data.birthday, 10)
+        );
+        age = current.getFullYear() - birthday.getFullYear();
+        const month_difference = current.getMonth() - birthday.getMonth();
+        if (
+          month_difference < 0 ||
+          (month_difference === 0 && current.getDate() < birthday.getDate())
+        ) {
+          age--;
+        }
+      }
+      return age;
+    })();
 
     let all_promise: any = [
       this.query_percent_hrr_day_data(),
@@ -355,15 +369,15 @@ export class PersonnelDetailComponent
 
   init_frequency_chart() {
     /* 
-      修訂日期: 20220225
+      修訂日期: 20220303
       第一階段: 1 個標準差
-      第二階段: 1.25 個標準差 
+      第二階段: 1.3 個標準差 
     */
     const limit = {
-      highest: 3.08,
+      highest: 3.14,
       higher: 2.79,
       lower: 0.47,
-      lowest: 0.18,
+      lowest: 0.12,
       max: 3.5,
     };
     let config = {
@@ -609,12 +623,12 @@ export class PersonnelDetailComponent
 
   init_rmssd_chart() {
     /* 
-      修訂日期: 20220225
-      第一階段: 1.25 個標準差
+      修訂日期: 20220303
+      第一階段: 1.3 個標準差
       第二階段: 1.5 個標準差 
     */
     const limit = {
-      lower: 8.21,
+      lower: 7.1,
       lowest: 2.67,
       max: 80,
     };
@@ -838,14 +852,14 @@ export class PersonnelDetailComponent
 
   init_sdnn_chart() {
     /* 
-      修訂日期: 20220301
-      第一階段: 2 個標準差
-      第二階段: 2.25 個標準差 
+      修訂日期: 20220303
+      第一階段: 1.8 個標準差
+      第二階段: 2.3 個標準差 
     */
     const limit = {
-      lower: 8.67,
-      lowest: 4.25,
-      max: 80,
+      lower: 12.2,
+      lowest: 3.37,
+      max: 100,
     };
     let config = {
       type: 'line',

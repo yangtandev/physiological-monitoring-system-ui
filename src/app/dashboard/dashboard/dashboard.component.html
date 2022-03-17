@@ -313,7 +313,7 @@
               border:
                 r.rmssd > 0 && r.rmssd <= 2.67
                   ? '3px solid red'
-                  : r.rmssd > 2.67 && r.rmssd <= 8.21
+                  : r.rmssd > 2.67 && r.rmssd <= 7.1
                   ? '3px solid orange'
                   : '3px solid white'
             }"
@@ -338,9 +338,9 @@
             style="border-radius: 0.5rem; margin-left: 5%"
             [ngStyle]="{
               border:
-                r.sdnn > 0 && r.sdnn <= 4.25
+                r.sdnn > 0 && r.sdnn <= 3.37
                   ? '3px solid red'
-                  : r.sdnn > 4.25 && r.sdnn <= 8.67
+                  : r.sdnn > 3.37 && r.sdnn <= 12.2
                   ? '3px solid orange'
                   : '3px solid white'
             }"
@@ -392,10 +392,10 @@
             style="border-radius: 0.5rem; margin-left: 5%"
             [ngStyle]="{
               border:
-                r.frequency > 3.08 || (r.frequency > 0 && r.frequency < 0.18)
+                r.frequency > 3.14 || (r.frequency > 0 && r.frequency < 0.12)
                   ? '3px solid red'
-                  : (r.frequency >= 2.79 && r.frequency <= 3.08) ||
-                    (r.frequency >= 0.18 && r.frequency <= 0.47)
+                  : (r.frequency >= 2.79 && r.frequency <= 3.14) ||
+                    (r.frequency >= 0.12 && r.frequency <= 0.47)
                   ? '3px solid orange'
                   : '3px solid white'
             }"
