@@ -2,8 +2,9 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 const port = 3000;
+const prefix = 'api';
 // const domain = `http://192.168.5.52:${port}`;
-const domain = `http://localhost:${port}`;
+const domain = `http://localhost:${port}/${prefix}`;
 
 export const environment = {
   appName: '生理監測儀錶板(HR Dashboard)',
@@ -39,25 +40,25 @@ export const environment = {
   getData: `${domain}/data`, // + user_id & start_time & end_time
 
   // Hr API
-  get5MinuteHr: `${domain}/5minute-hr`, // + user_id & start_time & end_time
-  getLatest1DayHr: `${domain}/latest-1day-hr`, // + user_id & start_time & end_time
-  getLatest1MonthHr: `${domain}/latest-1month-hr`, // + user_id & start_time & end_time
+  get5MinuteHr: `${domain}/hr/5minute-hr`, // + user_id & start_time & end_time
+  getLatest1DayHr: `${domain}/hr/latest-1day-hr`, // + user_id & start_time & end_time
+  getLatest1MonthHr: `${domain}/hr/latest-1month-hr`, // + user_id & start_time & end_time
 
   // Hrv API
-  get5MinuteHrv: `${domain}/5minute-hrv`, // + user_id & start_time & end_time
-  getLatest5MinuteHrv: `${domain}/latest-5minute-hrv`, // + user_id & start_time & end_time
-  get1HourHrv: `${domain}/1hour-hrv`, // + user_id & start_time & end_time
-  get1DayHrv: `${domain}/1day-hrv`, // + user_id & start_time & end_time
-  getLatest1DayHrv: `${domain}/latest-1day-hrv`, // + user_id & start_time & end_time
-  getLatest1WeekHrv: `${domain}/latest-1week-hrv`, // + user_id & start_time & end_time
-  getLatest1MonthHrv: `${domain}/latest-1month-hrv`, // + user_id & start_time & end_time
+  get5MinuteHrv: `${domain}/hrv/5minute-hrv`, // + user_id & start_time & end_time
+  getLatest5MinuteHrv: `${domain}/hrv/latest-5minute-hrv`, // + user_id & start_time & end_time
+  get1HourHrv: `${domain}/hrv/1hour-hrv`, // + user_id & start_time & end_time
+  get1DayHrv: `${domain}/hrv/1day-hrv`, // + user_id & start_time & end_time
+  getLatest1DayHrv: `${domain}/hrv/latest-1day-hrv`, // + user_id & start_time & end_time
+  getLatest1WeekHrv: `${domain}/hrv/latest-1week-hrv`, // + user_id & start_time & end_time
+  getLatest1MonthHrv: `${domain}/hrv/latest-1month-hrv`, // + user_id & start_time & end_time
 
   // Personnel API
   getPersonnels: `${domain}/personnels`,
   getPersonnel: `${domain}/personnel`, // + user_id
   postPersonnel: `${domain}/personnel`,
   putPersonnel: `${domain}/personnel`,
-  putPersonnelPairMac: `${domain}/personnel-pair-mac`,
+  putPersonnelPairMac: `${domain}/personnel/pair-mac`,
   deletePersonnel: `${domain}/personnel`, // + user_id
 
   // Gateway API
