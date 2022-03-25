@@ -61,6 +61,9 @@ export const environment = {
   putPersonnelPairMac: `${domain}/personnel/pair-mac`,
   deletePersonnel: `${domain}/personnel`, // + user_id
 
+  // Login API
+  login: `${domain}/login`, // username + password
+
   // Gateway API
   getGateways: `${domain}/gateways`,
   getGateway: `${domain}/gateway`, // + gateway

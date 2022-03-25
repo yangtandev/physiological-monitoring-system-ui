@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { APIService } from '../../services/api.service';
-
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-loginpage',
   templateUrl: './loginpage.component.html',
@@ -23,6 +23,7 @@ export class LoginpageComponent implements OnInit {
   passwordEmpty: boolean = false;
   username: string;
   password: string;
+  user: any = [];
 
   async ngOnInit() {
     this.cdRef.detectChanges();
@@ -47,15 +48,24 @@ export class LoginpageComponent implements OnInit {
         this.passwordEmpty = true;
       }
       return;
-    } else {
     }
 
-    if (this.username == 'admin' && this.password == 'admin123456') {
-      localStorage.setItem('enter', 'yes');
-      this.router.navigate(['/']);
-    } else {
-      localStorage.setItem('enter', 'no');
-      this.router.navigate(['/login']);
+    const login_data = {
+      username: this.username,
+      password: this.password,
+    };
+
+    try {
+      this.user = await this.apiService.postAPI(environment.login, login_data);
+      if (this.user) {
+        localStorage.setItem('enter', 'yes');
+        this.router.navigate(['/']);
+      } else {
+        localStorage.setItem('enter', 'no');
+        this.router.navigate(['/login']);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 }
