@@ -31,10 +31,11 @@ export class APIService {
     } else {
       new_url = url;
     }
-
+    const token = localStorage.getItem('token');
     const options = {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'Bearer ' + token,
       },
       responseType: 'json' as 'json',
     };
@@ -42,14 +43,21 @@ export class APIService {
   }
 
   async postAPI(url: string, data: Object = [], update: boolean = false) {
+    const token = localStorage.getItem('token');
     if (update === false) {
       const options = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
         responseType: 'json' as 'json',
       };
       return this.http.post(url, data, options).toPromise();
     }
     if (update === true) {
       const options = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
         responseType: 'text' as 'text',
       };
       return this.http.post(url, data, options).toPromise();
@@ -57,7 +65,11 @@ export class APIService {
   }
 
   async putAPI(url: string, data: Object) {
+    const token = localStorage.getItem('token');
     const options = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
       responseType: 'text' as 'text',
     };
     return this.http.put(url, data, options).toPromise();
@@ -65,7 +77,11 @@ export class APIService {
 
   async deleteAPI(url: string, data: string) {
     const new_url = data !== undefined ? `${url}/${data}` : url;
+    const token = localStorage.getItem('token');
     const options = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
       responseType: 'text' as 'text',
     };
     return this.http.delete(new_url, options).toPromise();

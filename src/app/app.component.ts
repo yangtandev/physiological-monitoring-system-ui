@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   private _mobileQueryListener: () => void;
   sidebarEnabled: boolean = environment.sidebarEnabled;
   sidebarOpened: boolean;
+  display: boolean;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): void {
     if (environment.documentTitle) {
       this.titleService.setTitle(environment.documentTitle);
     }
@@ -52,7 +53,7 @@ export class AppComponent implements OnInit {
       'heartbeat',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/heartbeat.svg')
     );
-    this.loggedIn;
+
     this.sidebarLinks = this.permissionService.sidebarLinks;
 
     let beginTime = 0;
@@ -68,10 +69,21 @@ export class AppComponent implements OnInit {
 
   logout() {
     localStorage.setItem('enter', 'no');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
+  is_loggedin(): boolean {
+    return (
+      localStorage.getItem('enter') === 'yes' && localStorage.getItem('token')
+    );
+  }
+
   backClicked() {
-    this._location.back();
+    if (window.history.length > 1) {
+      this._location.back();
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 }

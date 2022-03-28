@@ -1,18 +1,43 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
-  
-  <mat-toolbar color="primary" class="example-toolbar" fxLayout='row' fxLayoutAlign="start center" style="border-bottom: solid 1px white; height: 2.5rem;">
-    <button mat-icon-button (click)="snav.toggle()" *ngIf='sidebarEnabled'>
-      <mat-icon style="margin-top: -0.1rem;">menu</mat-icon>
+  <mat-toolbar
+    color="primary"
+    class="example-toolbar"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    style="border-bottom: solid 1px white; height: 3.5rem"
+  >
+    <button mat-icon-button (click)="snav.toggle()" *ngIf="sidebarEnabled">
+      <mat-icon style="margin-top: -0.1rem">menu</mat-icon>
     </button>
-    <a routerLink='/' class="link-unstyled" style="margin: 0; font-size: 1.2rem; letter-spacing: 1.5px; margin-left: 0.5rem;">{{title}}</a>
+    <a
+      routerLink="/"
+      class="link-unstyled"
+      style="
+        margin: 0;
+        font-size: 1.2rem;
+        letter-spacing: 1.5px;
+        margin-left: 0.5rem;
+      "
+      >{{ title }}</a
+    >
     <!-- <h1 class='app-name'>
       <a routerLink='/' class="link-unstyled">{{title}}</a>
     </h1> -->
-    <div fxLayout='row' fxLayoutAlign="start center" style='margin-left: auto;'>
-      <button mat-icon-button style='margin-right: 1rem;' (click)='backClicked()'>上一頁</button>
-      <button mat-icon-button (click)='logout()'>登出</button>
+    <div
+      *ngIf="is_loggedin()"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      style="margin-left: auto"
+    >
+      <button
+        mat-icon-button
+        style="margin-right: 1rem"
+        (click)="backClicked()"
+      >
+        上一頁
+      </button>
+      <button mat-icon-button (click)="logout()">登出</button>
     </div>
-    
 
     <!-- <h1 style='margin-left: auto; font-size: 5rem;'>
       <button mat-icon-button style='margin-right: 1rem;' (click)='backClicked()'>上一頁</button>
@@ -22,31 +47,63 @@
     <h1 style='margin-left: 1rem;' (click)='logout()' *ngIf='loggedIn | async'>登出</h1> -->
   </mat-toolbar>
 
-  <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav class='sidenav' #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
-      [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]='sidebarOpened'>
-      
-        <p style="margin-left: 1rem;">Dashboard</p>
-        <button mat-flat-button routerLink='/' fxLayoutAlign="center center" style="background-color: rgb(50, 50, 50); border-radius: 0; width: 100%; margin-top: 0.25rem; line-height: 3rem; letter-spacing: 1px;">動態儀錶板</button>
+  <mat-sidenav-container
+    class="example-sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+  >
+    <mat-sidenav
+      class="sidenav"
+      #snav
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="56"
+      [opened]="sidebarOpened"
+    >
+      <p style="margin-left: 1rem">Dashboard</p>
+      <button
+        mat-flat-button
+        routerLink="/"
+        fxLayoutAlign="center center"
+        style="
+          background-color: rgb(50, 50, 50);
+          border-radius: 0;
+          width: 100%;
+          margin-top: 0.25rem;
+          line-height: 3rem;
+          letter-spacing: 1px;
+        "
+      >
+        動態儀錶板
+      </button>
 
-        <div *ngFor='let section of sidebarLinks' style='margin-bottom:1rem'>
-          <p style="margin-left: 1rem;">管理清單</p>
-          <mat-divider></mat-divider>
-          <ng-container *ngFor='let link of section.links'>
-            <button mat-flat-button [routerLink]='link.link' *ngIf='link.enabled' fxLayoutAlign="center center" 
-              style="background-color: rgb(50, 50, 50); border-radius: 0; width: 100%; margin-top: 0.25rem; line-height: 3rem; letter-spacing: 1px;">{{link.text}}</button>
-
-          </ng-container>
-        </div>
-
+      <div *ngFor="let section of sidebarLinks" style="margin-bottom: 1rem">
+        <p style="margin-left: 1rem">管理清單</p>
+        <mat-divider></mat-divider>
+        <ng-container *ngFor="let link of section.links">
+          <button
+            mat-flat-button
+            [routerLink]="link.link"
+            *ngIf="link.enabled"
+            fxLayoutAlign="center center"
+            style="
+              background-color: rgb(50, 50, 50);
+              border-radius: 0;
+              width: 100%;
+              margin-top: 0.25rem;
+              line-height: 3rem;
+              letter-spacing: 1px;
+            "
+          >
+            {{ link.text }}
+          </button>
+        </ng-container>
+      </div>
     </mat-sidenav>
-  
 
     <router-outlet></router-outlet>
   </mat-sidenav-container>
 
-  <div id='footer'>
+  <div id="footer">
     <span>Gini All Rights Reserved</span>
   </div>
-</div> 
-
+</div>
