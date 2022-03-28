@@ -7,8 +7,8 @@ const prefix = 'api';
 const domain = `http://localhost:${port}/${prefix}`;
 
 export const environment = {
-  appName: '生理監測儀錶板(HR Dashboard)',
-  documentTitle: '生理監測儀錶板(HR Dashboard)',
+  appName: '生理監測儀錶板',
+  documentTitle: '生理監測儀錶板',
   home: '/',
   favicon: 'favicon.ico',
   production: false,

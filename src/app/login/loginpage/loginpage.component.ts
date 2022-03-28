@@ -23,7 +23,6 @@ export class LoginpageComponent implements OnInit {
   passwordEmpty: boolean = false;
   username: string;
   password: string;
-  user: any = [];
 
   async ngOnInit() {
     this.cdRef.detectChanges();
@@ -56,9 +55,14 @@ export class LoginpageComponent implements OnInit {
     };
 
     try {
-      this.user = await this.apiService.postAPI(environment.login, login_data);
-      if (this.user) {
+      let res: any = await this.apiService.postAPI(
+        environment.login,
+        login_data
+      );
+
+      if (res.message === 'success') {
         localStorage.setItem('enter', 'yes');
+        localStorage.setItem('token', res.token);
         this.router.navigate(['/']);
       } else {
         localStorage.setItem('enter', 'no');
