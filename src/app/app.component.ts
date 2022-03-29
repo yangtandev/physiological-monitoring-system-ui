@@ -96,6 +96,8 @@ export class AppComponent implements OnInit {
 
         if (res.status === 'success') {
           localStorage.setItem('token', res.token);
+        } else {
+          this.logout();
         }
       } else {
         this.logout();
