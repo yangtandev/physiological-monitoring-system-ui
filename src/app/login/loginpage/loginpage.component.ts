@@ -26,7 +26,6 @@ export class LoginpageComponent implements OnInit {
 
   async ngOnInit() {
     this.cdRef.detectChanges();
-    this.check_token();
   }
 
   async onLogin() {
