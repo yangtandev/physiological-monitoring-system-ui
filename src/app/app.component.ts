@@ -4,10 +4,11 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-
+import { Observable, timer } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { PermissionService } from './services/permission.service';
+import { APIService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,6 @@ export class AppComponent implements OnInit {
   private _mobileQueryListener: () => void;
   sidebarEnabled: boolean = environment.sidebarEnabled;
   sidebarOpened: boolean;
-  display: boolean;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -32,7 +32,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     media: MediaMatcher,
     private titleService: Title,
-    private permissionService: PermissionService
+    private permissionService: PermissionService,
+    private apiService: APIService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
     window.onbeforeunload = function () {
       beginTime = new Date().getTime();
     };
+    this.check_token();
   }
 
   logout() {
@@ -76,8 +78,29 @@ export class AppComponent implements OnInit {
   is_loggedin(): boolean {
     return (
       localStorage.getItem('enter') === 'yes' &&
-      localStorage.getItem('token') !== null
+      localStorage.getItem('username') !== null &&
+      localStorage.getItem('username') !== '' &&
+      localStorage.getItem('token') !== null &&
+      localStorage.getItem('token') !== ''
     );
+  }
+
+  check_token() {
+    setInterval(async () => {
+      if (this.is_loggedin()) {
+        let data = { username: localStorage.getItem('username') };
+        let res: any = await this.apiService.postAPI(
+          environment.checkStatus,
+          data
+        );
+
+        if (res.status === 'success') {
+          localStorage.setItem('token', res.token);
+        }
+      } else {
+        this.logout();
+      }
+    }, 5000);
   }
 
   backClicked() {

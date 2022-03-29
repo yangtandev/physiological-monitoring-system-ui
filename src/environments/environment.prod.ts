@@ -71,6 +71,7 @@ export const environment = {
 
   // Login API
   login: `${domain}/login`, // username + password
+  checkStatus: `${domain}/check-status`, // username
 
   // Gateway API
   getGateways: `${domain}/gateways`,

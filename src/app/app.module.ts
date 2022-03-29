@@ -93,6 +93,7 @@ registerLocaleData(locales);
   providers: [
     { provide: LOCALE_ID, useValue: 'zh-Hant' },
     { provide: MAT_DATE_LOCALE, useValue: 'zh-tw' },
+    AppComponent,
   ],
   bootstrap: [AppComponent],
 })
