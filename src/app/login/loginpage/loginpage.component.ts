@@ -60,7 +60,8 @@ export class LoginpageComponent implements OnInit {
         login_data
       );
 
-      if (res.message === 'success') {
+      if (res.status === 'success') {
+        localStorage.setItem('username', this.username);
         localStorage.setItem('enter', 'yes');
         localStorage.setItem('token', res.token);
         this.router.navigate(['/']);

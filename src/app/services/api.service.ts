@@ -4,9 +4,8 @@ import {
   HttpParams,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { catchError, retry } from 'rxjs/operators';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -31,6 +30,7 @@ export class APIService {
     } else {
       new_url = url;
     }
+
     const token = localStorage.getItem('token');
     const options = {
       headers: {
