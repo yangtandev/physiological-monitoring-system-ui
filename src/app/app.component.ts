@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
     window.onbeforeunload = function () {
       beginTime = new Date().getTime();
     };
-    this.check_token();
+    this.check_status();
   }
 
   logout() {
@@ -85,24 +85,24 @@ export class AppComponent implements OnInit {
     );
   }
 
-  check_token() {
+  check_status() {
     setInterval(async () => {
       if (this.is_loggedin()) {
-        let data = { username: localStorage.getItem('username') };
-        let res: any = await this.apiService.postAPI(
-          environment.checkStatus,
-          data
-        );
-
-        if (res.status === 'success') {
-          localStorage.setItem('token', res.token);
-        } else {
-          this.logout();
-        }
+        let token = { token: localStorage.getItem('token') };
+        await this.apiService
+          .postAPI(environment.checkStatus, token)
+          .then((res: any) => {
+            if (res.status === 'success') {
+              localStorage.setItem('token', res.token);
+            }
+          })
+          .catch((res: any) => {
+            if (res.error.status === 'fail') this.logout();
+          });
       } else {
         this.logout();
       }
-    }, 5000);
+    }, 1000);
   }
 
   backClicked() {

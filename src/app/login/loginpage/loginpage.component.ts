@@ -49,16 +49,11 @@ export class LoginpageComponent implements OnInit {
       return;
     }
 
-    const login_data = {
-      username: this.username,
-      password: this.password,
-    };
-
     try {
-      let res: any = await this.apiService.postAPI(
-        environment.login,
-        login_data
-      );
+      let res: any = await this.apiService.postAPI(environment.login, {
+        username: this.username,
+        password: this.password,
+      });
 
       if (res.status === 'success') {
         localStorage.setItem('username', this.username);
