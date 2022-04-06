@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
       } else {
         this.logout();
       }
-    }, 1000);
+    }, 5000);
   }
 
   backClicked() {
