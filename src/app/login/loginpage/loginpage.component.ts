@@ -56,12 +56,12 @@ export class LoginpageComponent implements OnInit {
       });
 
       if (res.status === 'success') {
-        localStorage.setItem('username', this.username);
-        localStorage.setItem('enter', 'yes');
-        localStorage.setItem('token', res.token);
+        sessionStorage.setItem('username', this.username);
+        sessionStorage.setItem('enter', 'yes');
+        sessionStorage.setItem('token', res.token);
         this.router.navigate(['/']);
       } else {
-        localStorage.setItem('enter', 'no');
+        sessionStorage.setItem('enter', 'no');
         this.router.navigate(['/login']);
       }
     } catch (error) {

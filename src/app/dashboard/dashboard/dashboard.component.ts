@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   cardColor: string;
 
   constructor(private apiService: APIService, private router: Router) {
-    const temp_auth = localStorage.getItem('enter');
+    const temp_auth = sessionStorage.getItem('enter');
     if (temp_auth == 'yes') {
     } else {
       this.router.navigate(['/login']);

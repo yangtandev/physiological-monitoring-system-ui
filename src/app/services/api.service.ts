@@ -31,7 +31,7 @@ export class APIService {
       new_url = url;
     }
 
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const options = {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -43,7 +43,7 @@ export class APIService {
   }
 
   async postAPI(url: string, data: Object = [], update: boolean = false) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (update === false) {
       const options = {
         headers: {
@@ -65,7 +65,7 @@ export class APIService {
   }
 
   async putAPI(url: string, data: Object) {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const options = {
       headers: {
         Authorization: 'Bearer ' + token,
@@ -77,7 +77,7 @@ export class APIService {
 
   async deleteAPI(url: string, data: string) {
     const new_url = data !== undefined ? `${url}/${data}` : url;
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const options = {
       headers: {
         Authorization: 'Bearer ' + token,

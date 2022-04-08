@@ -73,7 +73,7 @@ export class PersonnelComponent implements OnInit {
     private http: HttpClient,
     private router: Router
   ) {
-    const temp_auth = localStorage.getItem('enter');
+    const temp_auth = sessionStorage.getItem('enter');
     if (temp_auth == 'yes') {
     } else {
       this.router.navigate(['/login']);

@@ -11,8 +11,8 @@
 // The list of file replacements can be found in `angular.json`.
 const port = 3000;
 const prefix = 'api';
-// const domain = `http://localhost:${port}/${prefix}`;
-const domain = `http://18.179.13.26:${port}/${prefix}`;
+const domain = `http://localhost:${port}/${prefix}`;
+// const domain = `http://18.179.13.26:${port}/${prefix}`;
 
 export const environment = {
   appName: '生理監測儀錶板',

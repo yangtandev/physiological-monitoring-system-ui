@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     let differTime = 0;
     window.onunload = function () {
       differTime = new Date().getTime() - beginTime;
-      if (differTime <= 5) navigator.sendBeacon('/exit');
+      if (differTime <= 5) navigator.sendBeacon('/api/exit');
     };
     window.onbeforeunload = function () {
       beginTime = new Date().getTime();
@@ -70,30 +70,32 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    localStorage.setItem('enter', 'no');
-    localStorage.removeItem('token');
+    sessionStorage.setItem('enter', 'no');
+    sessionStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
   is_loggedin(): boolean {
     return (
-      localStorage.getItem('enter') === 'yes' &&
-      localStorage.getItem('username') !== null &&
-      localStorage.getItem('username') !== '' &&
-      localStorage.getItem('token') !== null &&
-      localStorage.getItem('token') !== ''
+      sessionStorage.getItem('enter') === 'yes' &&
+      sessionStorage.getItem('username') !== null &&
+      sessionStorage.getItem('username') !== '' &&
+      sessionStorage.getItem('token') !== null &&
+      sessionStorage.getItem('token') !== ''
     );
   }
 
   check_status() {
     setInterval(async () => {
       if (this.is_loggedin()) {
-        let token = { token: localStorage.getItem('token') };
+        let token = { token: sessionStorage.getItem('token') };
         await this.apiService
           .postAPI(environment.checkStatus, token)
           .then((res: any) => {
             if (res.status === 'success') {
-              localStorage.setItem('token', res.token);
+              sessionStorage.setItem('token', res.token);
+            } else {
+              this.logout();
             }
           })
           .catch((res: any) => {
