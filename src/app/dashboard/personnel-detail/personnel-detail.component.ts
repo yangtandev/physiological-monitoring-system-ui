@@ -85,8 +85,8 @@ export class PersonnelDetailComponent
   day_hrr_loading: boolean = true;
   ctx: any;
   end_date: Date = new Date();
-  max_month_date = new Date(); //目前時間
-  max_day_date = new Date(); //目前時間
+  max_month_date = new Date(); //目前Time
+  max_day_date = new Date(); //目前Time
 
   // hrv
   hrv_day_data: any;
@@ -388,7 +388,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'frequency_left',
             fill: false,
-            label: '每 5 分鐘紀錄',
+            label: 'Records every 5 minutes',
             data: [],
             borderColor: 'orange',
             borderWidth: 1.5,
@@ -435,7 +435,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前日平均',
+            label: 'Average of Previous Day',
             data: [],
             borderColor: '#CCCC4D',
             borderWidth: 2,
@@ -444,7 +444,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前週平均',
+            label: 'Average of Previous Week',
             data: [],
             borderColor: '#9ACD32',
             borderWidth: 2,
@@ -453,7 +453,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前月平均',
+            label: 'Average of Previous Month',
             data: [],
             borderColor: '#66CDAA',
             borderWidth: 2,
@@ -511,13 +511,13 @@ export class PersonnelDetailComponent
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.highest) {
-                    return '▲緊張';
+                    return '▲Tense';
                   } else if (label === limit.higher) {
-                    return '▲亢奮';
+                    return '▲Excited';
                   } else if (label === limit.lower) {
-                    return '▼疲勞';
+                    return '▼Fatigue';
                   } else if (label === limit.lowest) {
-                    return '▼過勞';
+                    return '▼Overwork';
                   }
                 },
               },
@@ -539,7 +539,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '時間',
+                labelString: 'Time',
               },
               time: {
                 parser: false,
@@ -640,7 +640,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'rmssd_left',
             fill: false,
-            label: '每 5 分鐘平均',
+            label: 'Average of every 5 minutes',
             data: [],
             borderColor: 'orange',
             borderWidth: 1.5,
@@ -687,7 +687,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前日平均',
+            label: 'Average of Previous Day',
             data: [],
 
             borderColor: '#CCCC4D',
@@ -697,7 +697,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前週平均',
+            label: 'Average of Previous Week',
             data: [],
             borderColor: '#9ACD32',
             borderWidth: 2,
@@ -706,7 +706,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前月平均',
+            label: 'Average of Previous Month',
             data: [],
             borderColor: '#66CDAA',
             borderWidth: 2,
@@ -763,9 +763,9 @@ export class PersonnelDetailComponent
                 autoSkip: false,
                 callback: function (label, index, labels) {
                   if (label === limit.lowest) {
-                    return '▼過勞';
+                    return '▼Overwork';
                   } else if (label === limit.lower) {
-                    return '▼疲勞';
+                    return '▼Fatigue';
                   }
                 },
               },
@@ -787,7 +787,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '時間',
+                labelString: 'Time',
               },
               time: {
                 parser: false,
@@ -869,7 +869,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'sdnn_left',
             fill: false,
-            label: '每 5 分鐘平均',
+            label: 'Average of every 5 minutes',
             data: [],
             borderColor: 'orange',
             borderWidth: 1.5,
@@ -916,7 +916,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前日平均',
+            label: 'Average of Previous Day',
             data: [],
             borderColor: '#CCCC4D',
             borderWidth: 2,
@@ -925,7 +925,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前週平均',
+            label: 'Average of Previous Week',
             data: [],
             borderColor: '#9ACD32',
             borderWidth: 2,
@@ -934,7 +934,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前月平均',
+            label: 'Average of Previous Month',
             data: [],
             borderColor: '#66CDAA',
             borderWidth: 2,
@@ -993,9 +993,9 @@ export class PersonnelDetailComponent
 
                 callback: function (label, index, labels) {
                   if (label === limit.lowest) {
-                    return '▼過勞';
+                    return '▼Overwork';
                   } else if (label === limit.lower) {
-                    return '▼疲勞';
+                    return '▼Fatigue';
                   }
                 },
               },
@@ -1017,7 +1017,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '時間',
+                labelString: 'Time',
               },
               time: {
                 parser: false,
@@ -1093,7 +1093,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'hrr_left',
             fill: false,
-            label: '每 5 分鐘平均',
+            label: 'Average of every 5 minutes',
             data: [],
             borderColor: 'orange',
             borderWidth: 1.5,
@@ -1140,7 +1140,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前日平均',
+            label: 'Average of Previous Day',
             data: [],
             borderColor: '#CCCC4D',
             borderWidth: 2,
@@ -1149,7 +1149,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前週平均',
+            label: 'Average of Previous Week',
             data: [],
             borderColor: '#9ACD32',
             borderWidth: 2,
@@ -1158,7 +1158,7 @@ export class PersonnelDetailComponent
           {
             fill: false,
             pointStyle: 'line',
-            label: '前月平均',
+            label: 'Average of Previous Month',
             data: [],
             borderColor: '#66CDAA',
             borderWidth: 2,
@@ -1215,9 +1215,9 @@ export class PersonnelDetailComponent
                 stepSize: 10,
                 callback: function (label, index, labels) {
                   if (label === limit.hard) {
-                    return '▲過勞';
+                    return '▲Overwork';
                   } else if (label === limit.moderate) {
-                    return '▲疲勞';
+                    return '▲Fatigue';
                   }
                 },
               },
@@ -1236,7 +1236,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '時間',
+                labelString: 'Time',
               },
               time: {
                 parser: false,
@@ -1302,7 +1302,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'A',
             fill: false,
-            label: '負荷累計',
+            label: 'Accumulated workloads ',
             data: this.percent_hrr_per_hour_sum,
             borderWidth: 3,
             borderColor: 'orange',
@@ -1314,7 +1314,7 @@ export class PersonnelDetailComponent
           {
             yAxisID: 'B',
             fill: false,
-            label: '每小時平均',
+            label: 'Hourly Average',
             data: this.percent_hrr_per_hour,
             borderColor: 'Silver',
             backgroundColor: '#00FFEF',
@@ -1375,7 +1375,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '累計 %HRR',
+                labelString: 'Accumulated %HRR',
               },
               position: 'left',
             },
@@ -1391,7 +1391,7 @@ export class PersonnelDetailComponent
                 fontColor: 'Silver',
                 fontSize: 18,
                 display: true,
-                labelString: '時間 ( 整點 )',
+                labelString: 'Hourly Time',
               },
               gridLines: {
                 display: false,

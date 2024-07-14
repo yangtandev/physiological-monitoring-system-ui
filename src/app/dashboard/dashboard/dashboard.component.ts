@@ -115,7 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.allCurrentData.length > 0) {
           for (let currentData of this.allCurrentData) {
             if (!currentData['location'] || currentData['location'] == '')
-              currentData['location'] = '未設定';
+              currentData['location'] = 'N/A';
             if (Date.now() - currentData.timestamp > 10000) currentData.hr = 0;
           }
 
@@ -161,7 +161,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cardColor = 'noSignal';
         currentData['hr'] = 0;
         currentData['temperature'] = 'false';
-        currentData['location'] = '無信號';
+        currentData['location'] = 'No Signal';
         currentData['hrr'] = 0;
         currentData['rmssd'] = 0;
         currentData['sdnn'] = 0;

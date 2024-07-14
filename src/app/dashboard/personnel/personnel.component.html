@@ -6,9 +6,9 @@
     fxLayoutAlign="start center"
     fxLayoutGap="1rem"
   >
-    <h3 style="margin: 0">手環配對</h3>
+    <h3 style="margin: 0">Wristband Pairing</h3>
     <mat-form-field appearance="standard">
-      <mat-label>姓名</mat-label>
+      <mat-label>Name</mat-label>
       <mat-select required [(ngModel)]="pairing.user_id" name="user_id">
         <mat-option *ngFor="let data of personnel" [value]="data.user_id">
           {{ data.name }}
@@ -29,11 +29,13 @@
       mat-raised-button
       [disabled]="!pairingForm.form.valid"
     >
-      配對
+      Pair
     </button>
 
-    <span *ngIf="wait == true"><font color="yellow">已更新資料</font></span>
-    <span *ngIf="wait == 'paired'"><font color="red">手環重複配對!</font></span>
+    <span *ngIf="wait == true"><font color="yellow">Data Updated.</font></span>
+    <span *ngIf="wait == 'paired'"
+      ><font color="red">Wristband already paired!</font></span
+    >
   </form>
 </div>
 
@@ -53,7 +55,7 @@
         mat-sort-header
         style="text-align: left"
       >
-        身分證
+        ID
       </th>
       <td mat-cell *matCellDef="let element">
         {{ element.user_id }}
@@ -67,7 +69,7 @@
         mat-sort-header
         style="text-align: left"
       >
-        姓名
+        Name
       </th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>
     </ng-container>
@@ -89,9 +91,11 @@
         mat-sort-header
         style="text-align: left"
       >
-        生日
+        Birthday
       </th>
-      <td mat-cell *matCellDef="let element">{{ element.birthday | date }}</td>
+      <td mat-cell *matCellDef="let element">
+        {{ element.birthday | date : "dd/MM/yyyy" }}
+      </td>
     </ng-container>
     <ng-container matColumnDef="sex">
       <th
@@ -100,7 +104,7 @@
         mat-sort-header
         style="text-align: left"
       >
-        性別
+        Sex
       </th>
       <td mat-cell *matCellDef="let element">{{ element.sex }}</td>
     </ng-container>
@@ -111,10 +115,10 @@
         mat-sort-header
         style="text-align: left"
       >
-        建立時間
+        Creation Time
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.create_date | date }}
+        {{ element.create_date | date : "dd/MM/yyyy" }}
       </td>
     </ng-container>
     <ng-container matColumnDef="update_date">
@@ -124,10 +128,10 @@
         mat-sort-header
         style="text-align: left"
       >
-        修改時間
+        Last Updated Time
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.update_date | date }}
+        {{ element.update_date | date : "dd/MM/yyyy" }}
       </td>
     </ng-container>
     <ng-container matColumnDef="action">
@@ -139,10 +143,10 @@
         style="text-align: right"
       >
         <button mat-raised-button (click)="expandedElement = element">
-          修改
+          Edit
         </button>
         <button mat-raised-button (click)="delete(element)" color="accent">
-          刪除
+          Delete
         </button>
       </td>
     </ng-container>
@@ -166,7 +170,7 @@
             fxLayoutGap="1rem"
           >
             <mat-form-field appearance="standard" fxFlex="15%">
-              <mat-label>姓名</mat-label>
+              <mat-label>Name</mat-label>
               <input
                 matInput
                 name="name"
@@ -176,7 +180,7 @@
               />
             </mat-form-field>
             <mat-form-field appearance="standard" fxFlex="20%">
-              <mat-label>生日</mat-label>
+              <mat-label>Birthday</mat-label>
               <input
                 matInput
                 [matDatepicker]="picker"
@@ -212,14 +216,14 @@
             <input hidden name="sex" [ngModel]="element.sex" />
             <input hidden name="create_date" [ngModel]="element.create_date" />
             <button type="submit" mat-raised-button color="primary">
-              儲存
+              Save
             </button>
             <button
               type="button;"
               mat-raised-button
               (click)="expandedElement = false"
             >
-              取消
+              Cancel
             </button>
           </form>
         </div>
@@ -240,12 +244,12 @@
           fxLayoutGap="1rem"
         >
           <mat-form-field appearance="standard" fxFlex="10%">
-            <mat-label>姓名</mat-label>
+            <mat-label>Name</mat-label>
             <input matInput name="name" id="name" required [(ngModel)]="name" />
           </mat-form-field>
 
           <mat-form-field appearance="standard" fxFlex="15%">
-            <mat-label>身分證</mat-label>
+            <mat-label>ID</mat-label>
             <input
               matInput
               name="user_id"
@@ -256,7 +260,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="standard" fxFlex="5%">
-            <mat-label>性別</mat-label>
+            <mat-label>Sex</mat-label>
             <!-- <input matInput name="sex" id="sex" required [(ngModel)]="sex" /> -->
             <mat-select
               [(value)]="selected"
@@ -265,13 +269,13 @@
               [(ngModel)]="sex"
             >
               <mat-option>None</mat-option>
-              <mat-option value="男">男</mat-option>
-              <mat-option value="女">女</mat-option>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="standard" fxFlex="15%">
-            <mat-label>生日</mat-label>
+            <mat-label>Birthday</mat-label>
             <input
               matInput
               [matDatepicker]="picker"
@@ -296,10 +300,10 @@
             mat-raised-button
             [disabled]="!macForm.form.valid"
           >
-            新增
+            Add
           </button>
           <span *ngIf="wait == 'repeatedly_create'"
-            ><font color="red">人員重複新增</font></span
+            ><font color="red">Person already exists!</font></span
           >
         </form>
       </td>

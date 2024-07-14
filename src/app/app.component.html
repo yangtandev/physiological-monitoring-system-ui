@@ -34,9 +34,9 @@
         style="margin-right: 1rem"
         (click)="backClicked()"
       >
-        上一頁
+        Back
       </button>
-      <button mat-icon-button (click)="logout()">登出</button>
+      <button mat-icon-button (click)="logout()">Logout</button>
     </div>
 
     <!-- <h1 style='margin-left: auto; font-size: 5rem;'>
@@ -73,11 +73,11 @@
           letter-spacing: 1px;
         "
       >
-        動態儀錶板
+        Real-time Monitoring
       </button>
 
       <div *ngFor="let section of sidebarLinks" style="margin-bottom: 1rem">
-        <p style="margin-left: 1rem">管理清單</p>
+        <p style="margin-left: 1rem">Console</p>
         <mat-divider></mat-divider>
         <ng-container *ngFor="let link of section.links">
           <button

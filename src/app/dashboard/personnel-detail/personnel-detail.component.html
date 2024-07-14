@@ -14,7 +14,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>個人資料 ( Personal Data )</h3>
+          <h3>Personal Information</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -22,15 +22,14 @@
         <tr>
           <td>
             <h4 style="margin: auto">
-              <strong
-                >姓名 ：{{ personnel_current_data.name || "N / A" }}</strong
-              >
+              <strong>Name: {{ personnel_current_data.name || "N/A" }}</strong>
             </h4>
           </td>
           <td>
             <h4 style="margin-left: 20px">
               <strong
-                >前月最大 HR ：{{ last_month_hr_max || "無前月資料" }}</strong
+                >Maximum HR of the Previous Month:
+                {{ last_month_hr_max || "N/A" }}</strong
               >
             </h4>
           </td>
@@ -38,13 +37,29 @@
         <tr>
           <td>
             <h4 style="margin: auto">
-              <strong>年齡 ：{{ birthday || "N / A" }}</strong>
+              <strong>Age: {{ birthday || "N/A" }}</strong>
             </h4>
           </td>
           <td>
             <h4 style="margin-left: 20px">
               <strong
-                >前月最小 HR ：{{ last_month_hr_min || "無前月資料" }}</strong
+                >Minimum HR of the Previous Month:
+                {{ last_month_hr_min || "N/A" }}</strong
+              >
+            </h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4 style="margin: auto">
+              <strong>Sex: {{ personnel_current_data.sex || "N/A" }}</strong>
+            </h4>
+          </td>
+          <td>
+            <h4 style="margin-left: 20px">
+              <strong
+                >Average HR for Previous Day:
+                {{ last_day_hr_mean || "N/A" }}</strong
               >
             </h4>
           </td>
@@ -53,33 +68,14 @@
           <td>
             <h4 style="margin: auto">
               <strong
-                >性別 ：{{ personnel_current_data.sex || "N / A" }}</strong
+                >Location:
+                {{ personnel_current_data.location || "N/A" }}</strong
               >
             </h4>
           </td>
           <td>
             <h4 style="margin-left: 20px">
-              <strong
-                >前日平均 HR ：{{ last_day_hr_mean || "無前日資料" }}</strong
-              >
-            </h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4 style="margin: auto">
-              <strong
-                >地點 ：{{
-                  personnel_current_data.location || "定位器未設定"
-                }}</strong
-              >
-            </h4>
-          </td>
-          <td>
-            <h4 style="margin-left: 20px">
-              <strong
-                >MAC：{{ personnel_current_data.mac || "尚未配對" }}</strong
-              >
+              <strong>MAC: {{ personnel_current_data.mac || "N/A" }}</strong>
             </h4>
           </td>
         </tr>
@@ -101,7 +97,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>即時心率數據 ( Real-time Heart Rate Data )</h3>
+          <h3>Real-time Heart Rate Data</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -112,7 +108,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>開始時間</mat-placeholder>
+          <mat-placeholder>Start Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker
             type="datetime"
@@ -130,7 +126,7 @@
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-placeholder>結束時間</mat-placeholder>
+          <mat-placeholder>End Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker2
             type="datetime"
@@ -161,14 +157,14 @@
           (click)="search_hr()"
           [disabled]="!hr_start_time || !hr_end_time"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('hr')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -176,8 +172,8 @@
           (click)="export_hr()"
           [disabled]="!hr_start_time || !hr_end_time || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
     </mat-expansion-panel>
@@ -199,7 +195,7 @@
         style="background: #00bcd4; margin-bottom: 1rem; margin-left: 1rem"
         (click)="change_status('hr')"
       >
-        停止 / 開始
+        Stop/Start
       </button>
       <div class="spinner" *ngIf="hr_loading">
         <mat-spinner diameter="200"> </mat-spinner>
@@ -227,10 +223,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>
-            每 5 分鐘 HRV 頻域分析 ( HRV Frequency domain analysis within every
-            5 minutes )
-          </h3>
+          <h3>HRV Frequency domain analysis within every 5 minutes</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -241,7 +234,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-label>選擇月份</mat-label>
+          <mat-label>Select Month</mat-label>
           <input
             matInput
             [matDatepicker]="datetimePicker_frequency_month"
@@ -276,14 +269,14 @@
           (click)="search_month('frequency')"
           [disabled]="!frequency_month_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('frequency')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -291,8 +284,8 @@
           (click)="export_month('frequency')"
           [disabled]="!frequency_month_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -302,7 +295,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>選擇日期</mat-placeholder>
+          <mat-placeholder>Select Month</mat-placeholder>
           <input
             matInput
             [matDatetimepicker]="datetimePicker_frequency_day"
@@ -328,14 +321,14 @@
           (click)="search_day('frequency')"
           [disabled]="!frequency_day_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('frequency')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -343,8 +336,8 @@
           (click)="export_day('frequency')"
           [disabled]="!frequency_day_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
 
@@ -355,7 +348,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>開始時間</mat-placeholder>
+          <mat-placeholder>Start Time</mat-placeholder>
           <mat-datetimepicker
             #starttimePicker_frequency
             type="datetime"
@@ -373,7 +366,7 @@
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-placeholder>結束時間</mat-placeholder>
+          <mat-placeholder>End Time</mat-placeholder>
           <mat-datetimepicker
             #endtimePicker_frequency
             type="datetime"
@@ -404,14 +397,14 @@
           (click)="search_time('frequency')"
           [disabled]="!frequency_start_time || !frequency_end_time"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('frequency')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -419,8 +412,8 @@
           (click)="export_time('frequency')"
           [disabled]="!frequency_start_time || !frequency_end_time || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
     </mat-expansion-panel>
@@ -436,7 +429,7 @@
           style="background: #00bcd4"
           (click)="change_status('frequency')"
         >
-          停止 / 開始
+          Stop/Start
         </button>
       </div>
       <mat-expansion-panel-header>
@@ -480,10 +473,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>
-            每 5 分鐘移動平均 RMSSD ( Moving average of RMSSD within every 5
-            minutes )
-          </h3>
+          <h3>Moving average of RMSSD within every 5 minutes</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -494,7 +484,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-label>選擇月份</mat-label>
+          <mat-label>Select Month</mat-label>
           <input
             matInput
             [matDatepicker]="datetimePicker_HRV_month"
@@ -525,14 +515,14 @@
           (click)="search_month('rmssd')"
           [disabled]="!rmssd_month_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('rmssd')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -540,8 +530,8 @@
           (click)="export_month('rmssd')"
           [disabled]="!rmssd_month_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -551,7 +541,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>選擇日期</mat-placeholder>
+          <mat-placeholder>Select Month</mat-placeholder>
           <input
             matInput
             [matDatetimepicker]="datetimePicker_rmssd_day"
@@ -575,14 +565,14 @@
           (click)="search_day('rmssd')"
           [disabled]="!rmssd_day_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('rmssd')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -590,8 +580,8 @@
           (click)="export_day('rmssd')"
           [disabled]="!rmssd_day_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
 
@@ -602,7 +592,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>開始時間</mat-placeholder>
+          <mat-placeholder>Start Time</mat-placeholder>
           <mat-datetimepicker
             #starttimePicker_rmssd
             type="datetime"
@@ -620,7 +610,7 @@
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-placeholder>結束時間</mat-placeholder>
+          <mat-placeholder>End Time</mat-placeholder>
           <mat-datetimepicker
             #endtimePicker_rmssd
             type="datetime"
@@ -651,14 +641,14 @@
           (click)="search_time('rmssd')"
           [disabled]="!rmssd_start_time || !rmssd_end_time"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('rmssd')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -666,8 +656,8 @@
           (click)="export_time('rmssd')"
           [disabled]="!rmssd_start_time || !rmssd_end_time || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
     </mat-expansion-panel>
@@ -683,7 +673,7 @@
           style="background: #00bcd4"
           (click)="change_status('rmssd')"
         >
-          停止 / 開始
+          Stop/Start
         </button>
       </div>
       <mat-expansion-panel-header>
@@ -721,10 +711,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>
-            每 5 分鐘移動平均 SDNN ( Moving average of SDNN within every 5
-            minutes )
-          </h3>
+          <h3>Moving average of SDNN within every 5 minutes</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -735,7 +722,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-label>選擇月份</mat-label>
+          <mat-label>Select Month</mat-label>
           <input
             matInput
             [matDatepicker]="datetimePicker_SDNN_month"
@@ -766,14 +753,14 @@
           (click)="search_month('sdnn')"
           [disabled]="!sdnn_month_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('sdnn')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -781,8 +768,8 @@
           (click)="export_month('sdnn')"
           [disabled]="!sdnn_month_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -792,7 +779,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>選擇日期</mat-placeholder>
+          <mat-placeholder>Select Month</mat-placeholder>
           <input
             matInput
             [matDatetimepicker]="datetimePicker_SDNN_day"
@@ -814,14 +801,14 @@
           (click)="search_day('sdnn')"
           [disabled]="!sdnn_day_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('sdnn')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -829,8 +816,8 @@
           (click)="export_day('sdnn')"
           [disabled]="!sdnn_day_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -840,7 +827,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>開始時間</mat-placeholder>
+          <mat-placeholder>Start Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker_SDNN_1
             type="datetime"
@@ -858,7 +845,7 @@
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-placeholder>結束時間</mat-placeholder>
+          <mat-placeholder>End Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker_SDNN_2
             type="datetime"
@@ -889,14 +876,14 @@
           (click)="search_time('sdnn')"
           [disabled]="!sdnn_start_time || !sdnn_end_time"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('sdnn')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -904,8 +891,8 @@
           (click)="export_time('sdnn')"
           [disabled]="!sdnn_start_time || !sdnn_end_time || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
     </mat-expansion-panel>
@@ -921,7 +908,7 @@
           style="background: #00bcd4"
           (click)="change_status('sdnn')"
         >
-          停止 / 開始
+          Stop/Start
         </button>
       </div>
       <mat-expansion-panel-header>
@@ -959,10 +946,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>
-            每 5 分鐘移動平均 %HRR 工作負荷 ( %HRR Workload within every 5
-            minutes )
-          </h3>
+          <h3>%HRR Workload within every 5 minutes</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -973,7 +957,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-label>選擇月份</mat-label>
+          <mat-label>Select Month</mat-label>
           <input
             matInput
             [matDatepicker]="datetimePicker_HRR_month"
@@ -1004,14 +988,14 @@
           (click)="search_month('hrr')"
           [disabled]="!hrr_month_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('hrr')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -1019,8 +1003,8 @@
           (click)="export_month('hrr')"
           [disabled]="!hrr_month_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -1030,7 +1014,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>選擇日期</mat-placeholder>
+          <mat-placeholder>Select Month</mat-placeholder>
           <input
             matInput
             [matDatetimepicker]="datetimePicker_HRR_day"
@@ -1052,14 +1036,14 @@
           (click)="search_day('hrr')"
           [disabled]="!hrr_day_date"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('hrr')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -1067,8 +1051,8 @@
           (click)="export_day('hrr')"
           [disabled]="!hrr_day_date || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
       <div
@@ -1078,7 +1062,7 @@
         style="margin-left: 1rem; margin-top: 1rem"
       >
         <mat-form-field>
-          <mat-placeholder>開始時間</mat-placeholder>
+          <mat-placeholder>Start Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker5
             type="datetime"
@@ -1096,7 +1080,7 @@
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-placeholder>結束時間</mat-placeholder>
+          <mat-placeholder>End Time</mat-placeholder>
           <mat-datetimepicker
             #datetimePicker6
             type="datetime"
@@ -1127,14 +1111,14 @@
           (click)="search_time('hrr')"
           [disabled]="!hrr_start_time || !hrr_end_time"
         >
-          搜尋
+          Search
         </button>
         <button
           mat-raised-button
           style="background: #00bcd4"
           (click)="clear_time('hrr')"
         >
-          清除
+          Clear
         </button>
         <button
           mat-raised-button
@@ -1142,8 +1126,8 @@
           (click)="export_time('hrr')"
           [disabled]="!hrr_start_time || !hrr_end_time || waiting"
         >
-          <span *ngIf="!waiting">匯出</span>
-          <span *ngIf="waiting">匯出中...</span>
+          <span *ngIf="!waiting">Export</span>
+          <span *ngIf="waiting">Exporting...</span>
         </button>
       </div>
     </mat-expansion-panel>
@@ -1159,7 +1143,7 @@
           style="background: #00bcd4"
           (click)="change_status('hrr')"
         >
-          停止 / 開始
+          Stop/Start
         </button>
       </div>
       <mat-expansion-panel-header>
@@ -1195,7 +1179,7 @@
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
-          <h3>日間 %HRR 工作負荷 ( Daytime %HRR Workload )</h3>
+          <h3>Daytime %HRR Workload</h3>
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="spinner" *ngIf="day_hrr_loading">

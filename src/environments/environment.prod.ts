@@ -9,14 +9,14 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-const port = 3000;
+// const port = 3000;
 const prefix = 'api';
-const domain = `http://localhost:${port}/${prefix}`;
-// const domain = `http://18.179.13.26:${port}/${prefix}`;
+// const domain = `http://localhost:${port}/${prefix}`;
+const domain = `https://hrv.ginibio.com/${prefix}`;
 
 export const environment = {
-  appName: '生理監測儀錶板',
-  documentTitle: '生理監測儀錶板',
+  appName: 'Physiological Monitoring System',
+  documentTitle: 'Physiological Monitoring System',
   home: '/',
   favicon: 'favicon.ico',
   production: false,
@@ -94,15 +94,15 @@ export const environment = {
       title: '管理',
       links: [
         {
-          text: '人員管理',
+          text: 'Personnel Management',
           link: '/personnel',
         },
         {
-          text: '設備管理',
+          text: 'Wristband Management',
           link: '/devices/pair',
         },
         {
-          text: '定位器管理',
+          text: 'Devices Management',
           link: '/devices/pi',
         },
       ],

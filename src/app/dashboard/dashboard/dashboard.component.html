@@ -25,11 +25,11 @@
             </mat-form-field> -->
       <form class="example-form" style="margin-top: 0.2rem">
         <mat-form-field class="example-full-width">
-          <mat-label>請輸入姓名</mat-label>
+          <mat-label>Search by name</mat-label>
           <input
             type="text"
-            placeholder="姓名"
-            aria-label="請輸入姓名"
+            placeholder="Please enter your name..."
+            aria-label="Search by name"
             matInput
             [formControl]="myControl"
             [matAutocomplete]="auto"
@@ -49,7 +49,7 @@
           [checked]="subscribing"
           (change)="slideChangeState($event)"
           style="font-size: 0.8rem"
-          >更新中</mat-slide-toggle
+          >Enable Real-time Updates</mat-slide-toggle
         >
       </section>
 
@@ -58,7 +58,7 @@
           [checked]="showUnpaired"
           (change)="slideChangeResult($event)"
           style="font-size: 0.8rem"
-          >無信號</mat-slide-toggle
+          >Show Items Without Signal</mat-slide-toggle
         >
       </section>
     </div>
@@ -191,7 +191,7 @@
               font-size: 1rem;
             "
           >
-            心率
+            HR
           </p>
 
           <div
@@ -230,13 +230,13 @@
               *ngIf="r.temperature != 'false' && r.hr > 0"
               style="font-size: 0.9rem; margin: 0"
             >
-              體溫：{{ r.temperature }} °C
+              Body Temperature: {{ r.temperature }} °C
             </p>
             <p
               *ngIf="r.temperature == 'false' || r.hr == 0"
               style="font-size: 0.9rem; margin: 0"
             >
-              體溫：N/A
+              Body Temperature: N/A
             </p>
           </div>
         </div>
@@ -288,7 +288,7 @@
                 letter-spacing: 0.5px;
               "
             >
-              無訊號
+              No Signal
             </div>
           </div>
         </div>
