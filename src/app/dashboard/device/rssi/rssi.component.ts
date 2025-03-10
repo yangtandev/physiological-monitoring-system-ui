@@ -6,7 +6,7 @@ import { Component, OnInit, Input} from '@angular/core';
   styleUrls: ['./rssi.component.scss']
 })
 export class RssiComponent implements OnInit {
-  @Input() rssi: Number;
+  @Input() rssi: number;
   imgSrc: String;
   constructor() { }
 
